@@ -1,4 +1,3 @@
-import sys
 import re
 
 __author__ = 'rjs'
