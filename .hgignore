@@ -7,9 +7,14 @@ MANIFEST
 build/lib.*
 dist/*
 
+# virtualenv
+Lib/*
+Scripts/*
+
 # PyCharm
 .idea/*
 *.iml
 
 syntax: regexp
 .*~
+

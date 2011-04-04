@@ -55,12 +55,13 @@ def convert_children(node):
     result.children = converted_children
     return result
 
-arg_regex = re.compile(r'(\w+)(\s+\((\w+)\))?\s*:\s*(.*)')
+arg_regex = re.compile(r'(\*{0,2}\w+)(\s+\((\w+)\))?\s*:\s*(.*)')
 
 def convert_args(node):
     assert node.lines[0].startswith('Args:')
     group_node = Node()
     for child in node.children:
+        arg = None
         for line in child.lines:
             m = arg_regex.match(line)
             if m is not None:
@@ -77,9 +78,10 @@ def convert_args(node):
             else:
                 #TODO: arg.children.append(line)
                 pass
-        last_child = arg.children[-1] if len(arg.children) != 0 else arg
-        for grandchild in child.children:
-            last_child.children.append(grandchild)
+        if arg is not None:
+            last_child = arg.children[-1] if len(arg.children) != 0 else arg
+            for grandchild in child.children:
+                last_child.children.append(grandchild)
     return group_node
 
 def convert_returns(node):
@@ -109,6 +111,7 @@ def convert_raises(node):
     assert node.lines[0].startswith('Raises:')
     group_node = Raises(node.indent)
     for child in node.children:
+        exception = None
         for line in child.lines:
             m = raise_regex.match(line)
             if m is not None:
@@ -123,9 +126,10 @@ def convert_raises(node):
             else:
                 #TODO: exception.children.append(line)
                 pass
-        last_child = exception.children[-1] if len(exception.children) != 0 else exception
-        for grandchild in child.children:
-            last_child.children.append(grandchild)
+        if exception is not None:
+            last_child = exception.children[-1] if len(exception.children) != 0 else exception
+            for grandchild in child.children:
+                last_child.children.append(grandchild)
     return group_node
 
 class Arg(object):
@@ -152,7 +156,9 @@ class Arg(object):
 
         dedent = self.child_indent - self.indent
 
-        result.append("{indent}:param {name}: {first_description}".format(indent=indent, name=self.name,
+        name = self.name.replace('*', r'\*')
+
+        result.append("{indent}:param {name}: {first_description}".format(indent=indent, name=name,
                         first_description=description[0].lstrip()))
 
         dedented_body = [line[dedent:] for line in description[1:]]
