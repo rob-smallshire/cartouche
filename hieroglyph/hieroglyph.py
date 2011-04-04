@@ -10,20 +10,16 @@ def ensure_terminal_blank(result):
 
 def parse_readabletext(lines):
     '''
-    Parse text in reAdableText format and return a reStructuredText sphinx
+    Parse text in hieroglyph format and return a reStructuredText sphinx
     equivalent,
     '''
     # Label each line with it's indent level and remove that indent prefix
-    #trimmed_lines = trim(lines)
     indent_lines = unindent(lines)
     indent_lines = pad_blank_lines(indent_lines)
     indent_lines = first_paragraph_indent(indent_lines)
-    #print indent_lines
     indent_paragraphs = split_paragraphs(indent_lines)
-    #print indent_paragraphs
     parse_tree = group_paragraphs(indent_paragraphs)
     syntax_tree = extract_structure(parse_tree)
-    #print syntax_tree
     result = syntax_tree.render_rst()
     ensure_terminal_blank(result)
     return result
@@ -132,13 +128,47 @@ def convert_raises(node):
                 last_child.children.append(grandchild)
     return group_node
 
-class Arg(object):
+
+class Node(object):
+
+    def __init__(self, indent=None, lines=None, parent=None):
+        if indent is not None:
+            self.indent = indent
+        else:
+            self.indent = 0
+
+        if lines is not None:
+            self.lines = lines
+        else:
+            self.lines = []
+
+        self.parent = parent
+
+        self.children = []
+
+    def add_child(self, child):
+        assert(child.parent is self)
+        self.children.append(child)
+
+    def __repr__(self):
+        return "Node(" + str(self.indent) + ", " + str(self.lines) + ", children=" + str(self.children) + ")"
+
+    def render_rst(self):
+        result = []
+        prefix = ' ' * self.indent
+        result.extend(prefix + line for line in self.lines)
+        for child in self.children:
+               result.extend(child.render_rst())
+        return result
+
+
+class Arg(Node):
 
     def __init__(self, indent, child_indent, name):
-        self.indent = indent
+        super(Arg, self).__init__(indent)
         self.child_indent = child_indent
         self.name = name
-        self.type = type
+        self.type = None
         self.children = []
 
     def __repr__(self):
@@ -173,10 +203,31 @@ class Arg(object):
             result.append('')
         return result
 
-class Except(object):
+
+class Raises(Node):
+
+    def __repr__(self):
+        return "Raises(" + str(self.indent) + ", " + str(self.lines) + ", children=" + str(self.children) + ")"
+
+    def render_rst(self):
+        result = []
+        prefix = ' ' * self.indent
+        result.append(prefix + ':raises:')
+        # TODO: result.extend(prefix + line for line in self.lines)
+        for child in self.children:
+            result.extend(child.render_rst(only_child=len(self.children) == 1))
+
+        # If the description didn't end with a blank line add one here
+        if len(result[-1].strip()) != 0:
+            result.append('')
+
+        return result
+
+
+class Except(Node):
 
     def __init__(self, indent, child_indent, type):
-        self.indent = indent
+        super(Except, self).__init__(indent=indent)
         self.child_indent = child_indent
         self.type = type
         self.children = []
@@ -212,16 +263,16 @@ class Except(object):
 
         return result
 
+class TitleNode(Node):
 
-class Returns(object):
-
-    def __init__(self, indent):
-        self.indent = indent
+    def __init__(self, title, indent):
+        super(TitleNode, self).__init__(indent=indent)
+        self.title = title
         self.line = ''
         self.children = []
 
     def __repr__(self):
-        return "Returns(children=" + str(self.children) + ")"
+        return self.title + "(children=" + str(self.children) + ")"
 
     def render_rst(self):
         result = []
@@ -233,8 +284,7 @@ class Returns(object):
             child_lines = child.render_rst()
             description.extend(child_lines)
 
-        result.append("{indent}:returns: {first_description}".format(indent=indent,
-                            first_description=description[0].lstrip()))
+        self.render_title(description, indent, result)
 
         result.extend(description[1:])
 
@@ -243,12 +293,26 @@ class Returns(object):
             result.append('')
         return result
 
-class Note(object):
+    def render_title(self, description, indent, result):
+        result.append(
+            "{indent}:{role}: {first_description}".format(indent=indent,
+               role=self.title.lower(), first_description=description[0].lstrip()))
+
+class Returns(TitleNode):
 
     def __init__(self, indent):
-        self.indent = indent
+        super(Returns, self).__init__(title='Returns', indent=indent)
+
+class Warning(TitleNode):
+
+    def __init__(self, indent):
+        super(Warning, self).__init__(title='Warning', indent=indent)
+
+class Note(Node):
+
+    def __init__(self, indent):
+        super(Note, self).__init__(indent=indent)
         self.line = ''
-        self.children = []
 
     def __repr__(self):
         return "Note(children=" + str(self.children) + ")"
@@ -279,97 +343,6 @@ class Note(object):
         # If the description didn't end with a blank line add one here
         if len(result[-1].strip()) != 0:
             result.append('')
-        return result
-
-
-class Warning(object):
-
-    def __init__(self, indent):
-        self.indent = indent
-        self.line = ''
-        self.children = []
-
-    def __repr__(self):
-        return "Warning(children=" + str(self.children) + ")"
-
-    def render_rst(self):
-        result = []
-        indent = ' ' * self.indent
-
-        # Render the param description
-        description = [self.line] if self.line else []
-        for child in self.children:
-            child_lines = child.render_rst()
-            description.extend(child_lines)
-
-        # Fix the indent on the first line
-        if len(description) > 1 and len(description[1].strip()) != 0:
-            body_indent = len(description[1]) - len(description[1].strip())
-        else:
-            body_indent = self.indent + 4
-
-        if len(description) > 0:
-            description[0] = ' ' * body_indent + description[0]
-
-        result.append(indent + ".. warning::")
-        result.append(indent + '')
-        result.extend(description)
-
-        # If the description didn't end with a blank line add one here
-        if len(result[-1].strip()) != 0:
-            result.append('')
-        return result
-
-
-class Node(object):
-
-    def __init__(self, indent=None, lines=None, parent=None):
-        if indent is not None:
-            self.indent = indent
-        else:
-            self.indent = 0
-
-        if indent is not None:
-            self.lines = lines
-        else:
-            self.lines = []
-
-        self.parent = parent
-
-        self.children = []
-
-    def add_child(self, child):
-        assert(child.parent is self)
-        self.children.append(child)
-
-    def __repr__(self):
-        return "Node(" + str(self.indent) + ", " + str(self.lines) + ", children=" + str(self.children) + ")"
-
-    def render_rst(self):
-        result = []
-        prefix = ' ' * self.indent
-        result.extend(prefix + line for line in self.lines)
-        for child in self.children:
-            result.extend(child.render_rst())
-        return result
-
-class Raises(Node):
-
-    def __repr__(self):
-        return "Raises(" + str(self.indent) + ", " + str(self.lines) + ", children=" + str(self.children) + ")"
-
-    def render_rst(self):
-        result = []
-        prefix = ' ' * self.indent
-        result.append(prefix + ':raises:')
-        # TODO: result.extend(prefix + line for line in self.lines)
-        for child in self.children:
-            result.extend(child.render_rst(only_child=len(self.children) == 1))
-
-        # If the description didn't end with a blank line add one here
-        if len(result[-1].strip()) != 0:
-            result.append('')
-
         return result
 
 
