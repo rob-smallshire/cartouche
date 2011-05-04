@@ -4,12 +4,18 @@ syntax: glob
 
 # Distutils
 MANIFEST
-build/lib.*
+build/*
 dist/*
+*.egg-info/*
 
 # PyCharm
-.idea/*
+.idea
 *.iml
+
+# virtualenv
+Lib/*
+Scripts/*
 
 syntax: regexp
 .*~
+

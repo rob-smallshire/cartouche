@@ -254,3 +254,33 @@ All of the source sequence will be consumed.
                 self.assertTrue(len(result_line.strip()) == 0)
             else:
                 self.assertEqual(actual_line, result_line)
+
+    def test_comment6(self):
+        source_lines = [u'A convenience factory for creating Records.',
+                        u'',
+                        u'Args:',
+                        u'    **kwargs: Each keyword argument will be used to initialise an',
+                        u'       attribute with the same name as the argument and the given',
+                        u'       value.',
+                        u'',
+                        u'Returns:',
+                        u'    A Record which has a named attribute for each of the keyword arguments.',
+                        u'']
+
+        expected = """A convenience factory for creating Records.
+
+:param **kwargs: Each keyword argument will be used to initialise an
+   attribute with the same name as the argument and the given
+   value.
+
+:returns: A Record which has a named attribute for each of the keyword arguments.
+
+"""
+        actual_lines = parse_readabletext(source_lines)
+        expected_lines = expected.splitlines()
+        self.assertEqual(len(actual_lines), len(expected_lines))
+        for actual_line, result_line in zip(actual_lines, expected_lines):
+            if len(actual_line.strip()) == 0:
+                self.assertTrue(len(result_line.strip()) == 0)
+            else:
+                self.assertEqual(actual_line, result_line)

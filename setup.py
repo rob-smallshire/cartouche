@@ -10,7 +10,7 @@ requires = ['Sphinx>=0.6']
 setup(
     name='hieroglyph',
     packages=['hieroglyph'],
-    version='0.5',
+    version='0.5.1',
     url='http://code.google.com/p/hieroglyph/',
     download_url='http://pypi.python.org/pypi/hieroglyph',
     license='BSD',
