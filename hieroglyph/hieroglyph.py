@@ -169,7 +169,6 @@ class Arg(Node):
         self.child_indent = child_indent
         self.name = name
         self.type = None
-        self.children = []
 
     def __repr__(self):
         return "Arg(" + str(self.name) + ", " + str(self.type) + ", children=" + str(self.children) + ")"
@@ -230,7 +229,6 @@ class Except(Node):
         super(Except, self).__init__(indent=indent)
         self.child_indent = child_indent
         self.type = type
-        self.children = []
 
     def __repr__(self):
         return "Except(" + str(self.type) + ", children=" + str(self.children) + ")"
@@ -269,7 +267,6 @@ class TitleNode(Node):
         super(TitleNode, self).__init__(indent=indent)
         self.title = title
         self.line = ''
-        self.children = []
 
     def __repr__(self):
         return self.title + "(children=" + str(self.children) + ")"
