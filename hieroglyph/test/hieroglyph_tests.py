@@ -356,7 +356,7 @@ All of the source sequence will be consumed.
             * ValueError - If this Queryable has been closed.
 
             * TypeError - If either collection_selector or result_selector are not
-                          callable.
+              callable.
         """
         source_lines = source.splitlines()
         actual_lines = parse_readabletext(source_lines)

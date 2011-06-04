@@ -251,7 +251,7 @@ class Except(Node):
                         bullet=bullet, type=self.type,
                         first_description=description[0].lstrip()))
 
-        dedented_body = [indent + ' ' * len(bullet) + line[dedent:] for line in description[1:]]
+        dedented_body = [' ' * len(bullet) + line[dedent:] for line in description[1:]]
 
         result.extend(dedented_body)
 
