@@ -211,8 +211,8 @@ class Raises(Node):
 
     def render_rst(self):
         result = []
-        prefix = ' ' * self.indent
-        result.append(prefix + ':raises:')
+        indent = ' ' * self.indent
+        result.append(indent + ':raises:')
         # TODO: result.extend(prefix + line for line in self.lines)
         for child in self.children:
             result.extend(child.render_rst(only_child=len(self.children) == 1))
@@ -253,7 +253,7 @@ class Except(Node):
                         bullet=bullet, type=self.type,
                         first_description=description[0].lstrip()))
 
-        dedented_body = [line[dedent:] for line in description[1:]]
+        dedented_body = [indent + ' ' * len(bullet) + line[dedent:] for line in description[1:]]
 
         result.extend(dedented_body)
 
