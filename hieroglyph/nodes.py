@@ -93,7 +93,6 @@ class Raises(Node):
         result = []
         indent = ' ' * self.indent
         result.append(indent + ':raises:')
-        # TODO: result.extend(prefix + line for line in self.lines)
         for child in self.children:
             result.extend(child.render_rst(only_child=len(self.children) == 1))
 

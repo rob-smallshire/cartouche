@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
+from setuptools import setup
+
+from hieroglyph import __version__ as version
 
 with open('README.txt', 'r') as readme:
     long_description = readme.read()
@@ -20,7 +22,7 @@ setup(
     long_description=long_description,
     zip_safe=False,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
