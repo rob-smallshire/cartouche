@@ -398,3 +398,81 @@ All of the source sequence will be consumed.
                 self.assertTrue(len(result_line.strip()) == 0)
             else:
                 self.assertEqual(actual_line, result_line)
+
+    def test_comment9(self):
+        source_lines = [u'Parse a single line of a tree to determine depth and node.',
+                        u'',
+                        u'Args:',
+                        u'    This line is missing an argument name.',
+                        u'    ',
+                        u'Returns:',
+                        u'    A 2-tuple containing the tree 0 based tree depth as the first',
+                        u'    element and the node description as the second element.',
+                        u'',
+                        u'Raises:',
+                        u'    ValueError: If line does not have the expected form.',
+                        u'']
+
+        self.assertRaises(RuntimeError, lambda: parse_readabletext(source_lines))
+
+    def test_comment10(self):
+        source = """
+        Execute the command described by concatenating the string function arguments
+        with the p4 -s global scripting flag and return the results in a dictionary.
+
+        For example, to run the command::
+
+          p4 -s fstat -T depotFile foo.h
+
+        call::
+
+          p4('fstat', '-T', 'depotFile', 'foo.h')
+
+        Args:
+            args: The arguments to the p4 command as a list of objects which will
+                be converted to strings.
+
+        Returns:
+            A dictionary of lists where each key in the dictionary is the field name
+            from the command output, and each value is a list of output lines in
+            order.
+
+        Raises:
+            PerforceError: If the command could not be run or if the command
+                reported an error.
+        """
+
+        expected = """
+        Execute the command described by concatenating the string function arguments
+        with the p4 -s global scripting flag and return the results in a dictionary.
+
+        For example, to run the command::
+
+          p4 -s fstat -T depotFile foo.h
+
+        call::
+
+          p4('fstat', '-T', 'depotFile', 'foo.h')
+
+        :param args: The arguments to the p4 command as a list of objects which will
+            be converted to strings.
+
+        :returns: A dictionary of lists where each key in the dictionary is the field name
+            from the command output, and each value is a list of output lines in
+            order.
+
+        :raises:
+            PerforceError - If the command could not be run or if the command
+            reported an error.
+                
+"""
+
+        source_lines = source.splitlines()
+        actual_lines = parse_readabletext(source_lines)
+        expected_lines = expected.splitlines()
+        self.assertEqual(len(actual_lines), len(expected_lines))
+        for actual_line, result_line in zip(actual_lines, expected_lines):
+            if len(actual_line.strip()) == 0:
+                self.assertTrue(len(result_line.strip()) == 0)
+            else:
+                self.assertEqual(actual_line, result_line)
