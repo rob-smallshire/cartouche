@@ -1,22 +1,45 @@
 import re
-from nodes import Node, Raises, Except, Note, Warning, Returns, Arg
+import sys
+
+from errors import HieroglyphError
+from nodes import (Node, Raises, Except, Note, Warning, Returns, Arg,
+                   ensure_terminal_blank)
 
 __author__ = 'Robert Smallshire'
 
 def parse_readabletext(lines):
+    '''Parse text in hieroglyph format and return a reStructuredText equivalent
+
+    Args:
+        lines: A sequence of strings representing the lines of one docstring as
+            read from the source by Sphinx. This string should be in a format
+            that can be parsed by hieroglyph.
+
+    Returns:
+        A list of lines containing the transformed docstring as
+        reStructuredText as produced by hieroglyph.
+
+    Raises:
+        RuntimeError: If the docstring cannot be parsed.
     '''
-    Parse text in hieroglyph format and return a reStructuredText sphinx
-    equivalent,
-    '''
-    # Label each line with it's indent level and remove that indent prefix
-    indent_lines = unindent(lines)
-    indent_lines = pad_blank_lines(indent_lines)
-    indent_lines = first_paragraph_indent(indent_lines)
-    indent_paragraphs = split_paragraphs(indent_lines)
-    parse_tree = group_paragraphs(indent_paragraphs)
-    syntax_tree = extract_structure(parse_tree)
-    result = syntax_tree.render_rst()
-    #ensure_terminal_blank(result)
+    # In the event of failure - we could consider catching a specific
+    # HieroglyphError here and returning the original lines untransformed -
+    # that would be a good solution if we could also figure out how to signal
+    # the error to Sphinx so that the problem is reported to the user.
+    try:
+        indent_lines = unindent(lines)
+        indent_lines = pad_blank_lines(indent_lines)
+        indent_lines = first_paragraph_indent(indent_lines)
+        indent_paragraphs = split_paragraphs(indent_lines)
+        parse_tree = group_paragraphs(indent_paragraphs)
+        syntax_tree = extract_structure(parse_tree)
+        result = syntax_tree.render_rst()
+        ensure_terminal_blank(result)
+    except HieroglyphError as e:
+        sys.stderr.write("Hieroglyph error: ")
+        sys.stderr.write(str(e))
+        sys.stderr.write('\n')
+        result = lines
     return result
 
 
@@ -58,7 +81,7 @@ def append_child_to_args_group_node(child, group_node, indent):
     for line in non_empty_lines:
         m = ARG_REGEX.match(line)
         if m is None:
-            raise RuntimeError("Invalid hieroglyph argument syntax")
+            raise HieroglyphError("Invalid hieroglyph argument syntax")
         param_name = m.group(1)
         param_type = m.group(3)
         param_text = m.group(4)
@@ -123,7 +146,7 @@ def append_child_to_raise_node(child, group_node):
     for line in non_empty_lines:
         m = RAISE_REGEX.match(line)
         if m is None:
-            raise RuntimeError("Invalid hieroglyph exception syntax")
+            raise HieroglyphError("Invalid hieroglyph exception syntax")
         exception_type = m.group(1)
         exception_text = m.group(2)
 
