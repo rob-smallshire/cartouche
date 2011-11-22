@@ -22,10 +22,6 @@ def parse_readabletext(lines):
     Raises:
         RuntimeError: If the docstring cannot be parsed.
     '''
-    # In the event of failure - we could consider catching a specific
-    # HieroglyphError here and returning the original lines untransformed -
-    # that would be a good solution if we could also figure out how to signal
-    # the error to Sphinx so that the problem is reported to the user.
     try:
         indent_lines = unindent(lines)
         indent_lines = pad_blank_lines(indent_lines)
@@ -42,10 +38,50 @@ def parse_readabletext(lines):
         result = lines
     return result
 
+def unindent(lines):
+    '''Convert a sequence of indented lines into a sequence of tuples where the
+    first element in each tuple is the indent in number of characters, and the
+    second element is the un-indented string.
 
-def extract_structure(node):
-    return convert_node(node)
+    Args:
+        lines: A sequence of strings representing the lines of text in a docstring.
 
+    Returns:
+        A list of tuples where each tuple corresponds to one line of the input
+        list. Each tuple has two entries - the first is the amount of indent in
+        characters, the second is the unindented text.
+    '''
+    unindented_lines = []
+    for line in lines:
+        unindented_line = line.lstrip()
+        indent = len(line) - len(unindented_line)
+        unindented_lines.append((indent, unindented_line))
+    return unindented_lines
+
+def pad_blank_lines(indent_texts):
+    '''Give blank lines the same indent level as the preceding line.'''
+    current_indent = 0
+    result = []
+    for indent, text in indent_texts:
+        if len(text) > 0:
+            current_indent = indent
+        result.append((current_indent, text))
+    return result
+
+def extract_structure(parse_tree):
+    '''Create an Abstract Syntax Tree representing the semantics of a parse tree.
+
+    Args:
+        parse_tree: TODO
+
+    Returns:
+        A Node with is the result of an Abstract Syntax Tree representing the
+        docstring.
+
+    Raises:
+        HieroglyphError: In the event that the parse tree cannot be understood.
+    '''
+    return convert_node(parse_tree)
 
 def convert_node(node):
     if node.indent == 0 and len(node.lines) == 0:
@@ -241,29 +277,6 @@ def first_paragraph_indent(indent_texts):
         result[0] = (current_indent, result[0][1])
 
     return result
-
-
-def pad_blank_lines(indent_texts):
-    '''Give blank lines the same indent level as the preceding line.'''
-    current_indent = 0
-    result = []
-    for indent, text in indent_texts:
-        if len(text) > 0:
-            current_indent = indent
-        result.append((current_indent, text))
-    return result
-
-
-def unindent(lines):
-    '''Convert a sequence of indented lines into a sequence of tuples where the
-    first element in each tuple is the indent in number of characters, and the
-    second element is the un-indented string'''
-    unindented_lines = []
-    for line in lines:
-        unindented_line = line.lstrip()
-        indent = len(line) - len(unindented_line)
-        unindented_lines.append((indent, unindented_line))
-    return unindented_lines
 
 
 def rewrite_autodoc(app, what, name, obj, options, lines):
