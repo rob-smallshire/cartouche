@@ -12,9 +12,9 @@ requires = ['Sphinx>=0.6']
 setup(
     name='hieroglyph',
     packages=['hieroglyph'],
-    version='0.5.1',
+    version = "{version}".format(version=version),
     url='http://code.google.com/p/hieroglyph/',
-    download_url='http://pypi.python.org/pypi/hieroglyph',
+    download_url="http://code.google.com/p/hieroglyph/downloads/detail?name=hieroglyph-{version}.tar.gz".format(version=version),
     license='BSD',
     author='Robert Smallshire',
     author_email='robert@smallshire.org.uk',
@@ -22,7 +22,7 @@ setup(
     long_description=long_description,
     zip_safe=False,
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',

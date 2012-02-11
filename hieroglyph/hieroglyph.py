@@ -7,13 +7,13 @@ from nodes import (Node, Raises, Except, Note, Warning, Returns, Arg,
 
 __author__ = 'Robert Smallshire'
 
-def parse_readabletext(lines):
+def parse_hieroglyph_text(lines):
     '''Parse text in hieroglyph format and return a reStructuredText equivalent
 
     Args:
-        lines: A sequence of strings representing the lines of one docstring as
-            read from the source by Sphinx. This string should be in a format
-            that can be parsed by hieroglyph.
+        lines: A sequence of strings representing the lines of a single
+            docstring as read from the source by Sphinx. This string should be
+            in a format that can be parsed by hieroglyph.
 
     Returns:
         A list of lines containing the transformed docstring as
@@ -26,7 +26,7 @@ def parse_readabletext(lines):
         indent_lines = unindent(lines)
         indent_lines = pad_blank_lines(indent_lines)
         indent_lines = first_paragraph_indent(indent_lines)
-        indent_paragraphs = split_paragraphs(indent_lines)
+        indent_paragraphs = gather_lines(indent_lines)
         parse_tree = group_paragraphs(indent_paragraphs)
         syntax_tree = extract_structure(parse_tree)
         result = syntax_tree.render_rst()
@@ -38,18 +38,20 @@ def parse_readabletext(lines):
         result = lines
     return result
 
+
 def unindent(lines):
-    '''Convert a sequence of indented lines into a sequence of tuples where the
-    first element in each tuple is the indent in number of characters, and the
-    second element is the un-indented string.
+    '''Convert an iterable of indented lines into a sequence of tuples.
+
+    The first element of each tuple is the indent in number of characters, and
+    the second element is the unindented string.
 
     Args:
         lines: A sequence of strings representing the lines of text in a docstring.
 
     Returns:
         A list of tuples where each tuple corresponds to one line of the input
-        list. Each tuple has two entries - the first is the amount of indent in
-        characters, the second is the unindented text.
+        list. Each tuple has two entries - the first is an integer giving the
+        size of the indent in characters, the second is the unindented text.
     '''
     unindented_lines = []
     for line in lines:
@@ -58,8 +60,18 @@ def unindent(lines):
         unindented_lines.append((indent, unindented_line))
     return unindented_lines
 
+
 def pad_blank_lines(indent_texts):
-    '''Give blank lines the same indent level as the preceding line.'''
+    '''Give blank (empty) lines the same indent level as the preceding line.
+
+    Args:
+        indent_texts: An iterable of tuples each containing an integer in the
+            first element and a string in the second element.
+
+    Returns:
+        A list of tuples each containing an integer in the first element and a
+        string in the second element.
+    '''
     current_indent = 0
     result = []
     for indent, text in indent_texts:
@@ -67,6 +79,7 @@ def pad_blank_lines(indent_texts):
             current_indent = indent
         result.append((current_indent, text))
     return result
+
 
 def extract_structure(parse_tree):
     '''Create an Abstract Syntax Tree representing the semantics of a parse tree.
@@ -82,6 +95,7 @@ def extract_structure(parse_tree):
         HieroglyphError: In the event that the parse tree cannot be understood.
     '''
     return convert_node(parse_tree)
+
 
 def convert_node(node):
     if node.indent == 0 and len(node.lines) == 0:
@@ -204,39 +218,51 @@ def group_paragraphs(indent_paragraphs):
     Group paragraphs so that more indented paragraphs become children of less
     indented paragraphs.
     '''
-    # The three consists of tuples of the form (indent, [children]) where the
+    # The tree consists of tuples of the form (indent, [children]) where the
     # children may be strings or other tuples
 
     root = Node(0, [], None)
     current_node = root
 
-    current_indent = -1
+    previous_indent = -1
     for indent, lines in indent_paragraphs:
-        if indent > current_indent:
-            # Child
-            child = Node(indent, lines, current_node)
-            current_node.add_child(child)
-            current_node = child
-        elif indent == current_indent:
-            # Sibling
-            sibling = Node(indent, lines, current_node.parent)
-            current_node.parent.add_child(sibling)
-            current_node = sibling
-        elif indent < current_indent:
-            # (Great) Uncle
-            ancestor = current_node
-            while ancestor.indent >= indent:
-                if ancestor.parent is None:
-                    break
-                ancestor = ancestor.parent
-            uncle = Node(indent, lines, ancestor)
-            ancestor.add_child(uncle)
-            current_node = uncle
-        current_indent = indent
+        if indent > previous_indent:
+            current_node = create_child_node(current_node, indent, lines)
+        elif indent == previous_indent:
+            current_node = create_sibling_node(current_node, indent, lines)
+        elif indent < previous_indent:
+            current_node = create_uncle_node(current_node, indent, lines)
+        previous_indent = indent
     return root
 
 
-def split_paragraphs(indent_lines):
+def create_sibling_node(current_node, indent, lines):
+    sibling = Node(indent, lines, current_node.parent)
+    current_node.parent.add_child(sibling)
+    current_node = sibling
+    return current_node
+
+
+def create_child_node(current_node, indent, lines):
+    child = Node(indent, lines, current_node)
+    current_node.add_child(child)
+    current_node = child
+    return current_node
+
+
+def create_uncle_node(current_node, indent, lines):
+    ancestor = current_node
+    while ancestor.indent >= indent:
+        if ancestor.parent is None:
+            break
+        ancestor = ancestor.parent
+    uncle = Node(indent, lines, ancestor)
+    ancestor.add_child(uncle)
+    current_node = uncle
+    return current_node
+
+
+def gather_lines(indent_lines):
     '''Split the list of (int, str) tuples into a list of (int, [str]) tuples
     to group the lines into paragraphs of consistent indent.
     '''
@@ -258,31 +284,89 @@ def split_paragraphs(indent_lines):
             paragraph[1].append(line)
         previous_indent = indent
         previous_blank = blank
-
     return result
 
 
 def first_paragraph_indent(indent_texts):
-    '''Fix the indentation on the first paragraph. This occurs because the first
-    line of a multi-line doc-string following a quote usually has no indent.
-    '''
-    result = indent_texts[:]
-    current_indent = 0
-    for indent, text in indent_texts:
-        if len(text) == 0:
-            break
-        current_indent = indent
+    '''Fix the indentation on the first paragraph.
 
-    if len(result) != 0:
-        result[0] = (current_indent, result[0][1])
+    This occurs because the first line of a multi-line docstring following the
+    opening quote usually has no indent.
+
+    Args:
+        indent_texts: The lines of the docstring as an iterable over 2-tuples
+            each containing an integer indent level as the first element and
+            the text as the second element.
+
+    Return:
+        A list of 2-tuples, each containing an integer indent level as the
+        first element and the text as the second element.
+    '''
+    opening_indent = determine_opening_indent(indent_texts)
+
+    result = []
+    input = iter(indent_texts)
+    for indent, text in input:
+        if indent == 0:
+            result.append((opening_indent, text))
+        else:
+            result.append((indent, text))
+            break
+
+    for indent, text in input:
+        result.append((indent, text))
 
     return result
 
 
+def determine_opening_indent(indent_texts):
+    '''Determine the opening indent level for a docstring.
+
+    The opening indent level is the indent level is the first non-zero indent
+    level of a non-empty line in the docstring.
+
+    Args:
+        indent_texts: The lines of the docstring as an iterable over 2-tuples
+            each containing an integer indent level as the first element and
+            the text as the second element.
+
+    Returns:
+        The opening indent level as an integer.
+    '''
+    for indent, text in indent_texts:
+        if indent > 0 and text:
+            return indent
+    return 0
+
+
 def rewrite_autodoc(app, what, name, obj, options, lines):
+    '''Convert lines from Hieroglyph to Sphinx format.
+
+    The function to be called by the Sphinx autodoc extension when autodoc
+    has read and processed a docstring. This function modified its
+    ``lines`` argument *in place* replacing Hieroglyph syntax input into
+    Sphinx reStructuredText output.
+
+    Args:
+        apps: The Sphinx application object.
+
+        what: The type of object which the docstring belongs to. One of
+            'module', 'class', 'exception', 'function', 'method', 'attribute'
+
+        name: The fully qualified name of the object.
+
+        obj: The object itself.
+
+        options: The options given to the directive. An object with attributes
+            ``inherited_members``, ``undoc_members``, ``show_inheritance`` and
+            ``noindex`` that are ``True`` if the flag option of the same name
+            was given to the auto directive.
+
+        lines: The lines of the docstring.  Will be modified *in place*.
+    '''
     copy = lines[:]
     try:
-        lines[:] = parse_readabletext(lines)
+        lines[:] = parse_hieroglyph_text(lines)
     except:
         print "lines =", copy
         raise

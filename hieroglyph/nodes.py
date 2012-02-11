@@ -1,6 +1,4 @@
-#from hieroglyph.hieroglyph import ensure_terminal_blank
-
-__author__ = 'rjs'
+__author__ = 'Robert Smallshire'
 
 class Node(object):
 
