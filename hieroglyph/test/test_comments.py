@@ -477,3 +477,110 @@ All of the source sequence will be consumed.
                 self.assertTrue(len(result_line.strip()) == 0)
             else:
                 self.assertEqual(actual_line, result_line)
+
+    def test_comment11(self):
+        source = """Projects each element of a sequence to an intermediate new sequence,
+        flattens the resulting sequences into one sequence and optionally
+        transforms the flattened sequence using a selector function.
+
+        Warning: This method may explode at short notice.
+
+        Args:
+            collection_selector: A unary function mapping each element of the
+                source iterable into an intermediate sequence. The single
+                argument of the collection_selector is the value of an element
+                from the source sequence. The return value should be an
+                iterable derived from that element value. The default
+                collection_selector, which is the identity function, assumes
+                that each element of the source sequence is itself iterable.
+
+            result_selector: An optional unary function mapping the elements in
+                the flattened intermediate sequence to corresponding elements
+                of the result sequence. The single argument of the
+                result_selector is the value of an element from the flattened
+                intermediate sequence. The return value should be the
+                corresponding value in the result sequence. The default
+                result_selector is the identity function.
+
+        Returns:
+            A Queryable over a generated sequence whose elements are the result
+            of applying the one-to-many collection_selector to each element of
+            the source sequence, concatenating the results into an intermediate
+            sequence, and then mapping each of those elements through the
+            result_selector into the result sequence.
+
+        Raises:
+            ValueError: If this Queryable has been closed.
+            TypeError: If either collection_selector or result_selector are not
+                callable.
+        """
+
+        expected = """        Projects each element of a sequence to an intermediate new sequence,
+        flattens the resulting sequences into one sequence and optionally
+        transforms the flattened sequence using a selector function.
+
+        .. warning::
+
+            This method may explode at short notice.
+
+        :param collection_selector: A unary function mapping each element of the
+            source iterable into an intermediate sequence. The single
+            argument of the collection_selector is the value of an element
+            from the source sequence. The return value should be an
+            iterable derived from that element value. The default
+            collection_selector, which is the identity function, assumes
+            that each element of the source sequence is itself iterable.
+
+        :param result_selector: An optional unary function mapping the elements in
+            the flattened intermediate sequence to corresponding elements
+            of the result sequence. The single argument of the
+            result_selector is the value of an element from the flattened
+            intermediate sequence. The return value should be the
+            corresponding value in the result sequence. The default
+            result_selector is the identity function.
+
+        :returns: A Queryable over a generated sequence whose elements are the result
+            of applying the one-to-many collection_selector to each element of
+            the source sequence, concatenating the results into an intermediate
+            sequence, and then mapping each of those elements through the
+            result_selector into the result sequence.
+
+        :raises:
+            * ValueError - If this Queryable has been closed.
+
+            * TypeError - If either collection_selector or result_selector are not
+              callable.
+        """
+        source_lines = source.splitlines()
+        actual_lines = parse_hieroglyph_text(source_lines)
+        expected_lines = expected.splitlines()
+        self.assertEqual(len(actual_lines), len(expected_lines))
+        for actual_line, result_line in zip(actual_lines, expected_lines):
+            if len(actual_line.strip()) == 0:
+                self.assertTrue(len(result_line.strip()) == 0)
+            else:
+                self.assertEqual(actual_line, result_line)
+
+    def test_comment12(self):
+        source = """Determine if all elements in the source sequence satisfy a condition.
+
+        All of the source sequence will be consumed.
+
+        Note: This method uses immediate execution.
+
+        Args:
+            predicate: An optional single argument function used to test each
+                elements. If omitted, the bool() function is used resulting in
+                the elements being tested directly.
+
+        Returns:
+            True if all elements in the sequence meet the predicate condition,
+            otherwise False.
+
+        Raises:
+            This is not a proper exception description
+        """
+
+        source_lines = source.splitlines()
+        self.assertRaises(HieroglyphError, lambda: parse_hieroglyph_text(source_lines))
+

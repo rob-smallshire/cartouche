@@ -1,7 +1,50 @@
 import unittest
-from hieroglyph.hieroglyph import first_paragraph_indent, gather_lines
+from hieroglyph.hieroglyph import first_paragraph_indent, gather_lines, unindent
 
 __author__ = 'Robert Smallshire'
+
+class UnindentTests(unittest.TestCase):
+
+    def test_zero_lines(self):
+        source   = []
+        expected = []
+        actual = unindent(source)
+        self.assertEqual(actual, expected)
+
+    def test_one_zero_indent_line(self):
+        source   = ["First line"]
+        expected = [(0, "First line")]
+        actual = unindent(source)
+        self.assertEqual(actual, expected)
+
+    def test_two_zero_indent_lines(self):
+        source   = ["First line",
+                    "Second line"]
+        expected = [(0, "First line"),
+                    (0, "Second line")]
+        actual = unindent(source)
+        self.assertEqual(actual, expected)
+
+    def test_two_indented_lines(self):
+        source   = ["    First line",
+                    "      Second line"]
+        expected = [(4, "First line"),
+                    (6, "Second line")]
+        actual = unindent(source)
+        self.assertEqual(actual, expected)
+
+    def test_whitespace_line(self):
+        source   = ["    "]
+        expected = [(4, "")]
+        actual = unindent(source)
+        self.assertEqual(actual, expected)
+
+    def test_tab_line(self):
+        source   = ["\tHello"]
+        expected = [(1, "Hello")]
+        actual = unindent(source)
+        self.assertEqual(actual, expected)
+
 
 class FirstParagraphIndentTests(unittest.TestCase):
 
@@ -151,13 +194,6 @@ class GatherLinesTests(unittest.TestCase):
         actual = gather_lines(source)
         self.assertEqual(actual, expected)
 
-    def test_indented_lines(self):
-        source   = [(0, 'First line'),
-                    (4, 'Second line')]
-        expected = [(0, ['First line']),
-                    (4, ['Second line'])]
-        actual = gather_lines(source)
-        self.assertEqual(actual, expected)
 
     def test_indented_lines(self):
         source   = [(0, 'First line'),

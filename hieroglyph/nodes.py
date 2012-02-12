@@ -35,7 +35,7 @@ class Node(object):
             result.extend(child.render_rst())
         return result
 
-    
+
 
 class Arg(Node):
 
@@ -183,11 +183,40 @@ class Returns(TitleNode):
 
 
 
-class Warning(TitleNode):
+class Warning(Node):
 
     def __init__(self, indent):
-        super(Warning, self).__init__(title='Warning', indent=indent)
+        super(Warning, self).__init__(indent=indent)
 
+    def __repr__(self):
+        return "Warning(children=" + str(self.children) + ")"
+
+    def render_rst(self):
+        # TODO: Factor out the commonality between this and Note below
+        result = []
+        indent = ' ' * self.indent
+
+        # Render the param description
+        description = [self.line] if self.line else []
+        for child in self.children:
+            child_lines = child.render_rst()
+            description.extend(child_lines)
+
+        # Fix the indent on the first line
+        if len(description) > 1 and len(description[1].strip()) != 0:
+            body_indent = len(description[1]) - len(description[1].strip())
+        else:
+            body_indent = self.indent + 4
+
+        if len(description) > 0:
+            description[0] = ' ' * body_indent + description[0]
+
+        result.append(indent + ".. warning::")
+        result.append(indent + '')
+        result.extend(description)
+
+        ensure_terminal_blank(result)
+        return result
 
 
 class Note(Node):
@@ -202,6 +231,7 @@ class Note(Node):
 
 
     def render_rst(self):
+        # TODO: Factor out the commonality between this and Warning above
         result = []
         indent = ' ' * self.indent
 
