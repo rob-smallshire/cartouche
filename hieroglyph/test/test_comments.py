@@ -414,17 +414,7 @@ All of the source sequence will be consumed.
                         u'    ValueError: If line does not have the expected form.',
                         u'']
 
-        # There is an error in here, so we expect the source_lines to be
-        # returned untransformed - that is, expected_lines == source_lines
-        
-        actual_lines = parse_hieroglyph_text(source_lines)
-        expected_lines = source_lines
-        self.assertEqual(len(actual_lines), len(expected_lines))
-        for actual_line, result_line in zip(actual_lines, expected_lines):
-            if len(actual_line.strip()) == 0:
-                self.assertTrue(len(result_line.strip()) == 0)
-            else:
-                self.assertEqual(actual_line, result_line)
+        self.assertRaises(HieroglyphError, lambda: parse_hieroglyph_text(source_lines))
 
     def test_comment10(self):
         source = """
@@ -475,7 +465,7 @@ All of the source sequence will be consumed.
         :raises:
             PerforceError - If the command could not be run or if the command
             reported an error.
-                
+
 """
 
         source_lines = source.splitlines()

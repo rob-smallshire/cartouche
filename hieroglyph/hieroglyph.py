@@ -1,5 +1,6 @@
+from __future__ import print_function
+
 import re
-import sys
 
 from errors import HieroglyphError
 from nodes import (Node, Raises, Except, Note, Warning, Returns, Arg,
@@ -22,20 +23,14 @@ def parse_hieroglyph_text(lines):
     Raises:
         RuntimeError: If the docstring cannot be parsed.
     '''
-    try:
-        indent_lines = unindent(lines)
-        indent_lines = pad_blank_lines(indent_lines)
-        indent_lines = first_paragraph_indent(indent_lines)
-        indent_paragraphs = gather_lines(indent_lines)
-        parse_tree = group_paragraphs(indent_paragraphs)
-        syntax_tree = extract_structure(parse_tree)
-        result = syntax_tree.render_rst()
-        ensure_terminal_blank(result)
-    except HieroglyphError as e:
-        sys.stderr.write("Hieroglyph error: ")
-        sys.stderr.write(str(e))
-        sys.stderr.write('\n')
-        result = lines
+    indent_lines = unindent(lines)
+    indent_lines = pad_blank_lines(indent_lines)
+    indent_lines = first_paragraph_indent(indent_lines)
+    indent_paragraphs = gather_lines(indent_lines)
+    parse_tree = group_paragraphs(indent_paragraphs)
+    syntax_tree = extract_structure(parse_tree)
+    result = syntax_tree.render_rst()
+    ensure_terminal_blank(result)
     return result
 
 
@@ -266,26 +261,42 @@ def gather_lines(indent_lines):
     '''Split the list of (int, str) tuples into a list of (int, [str]) tuples
     to group the lines into paragraphs of consistent indent.
     '''
+    return remove_empty_paragraphs(split_separated_lines(gather_lines_by_indent(indent_lines)))
+
+def gather_lines_by_indent(indent_lines):
     result = []
     previous_indent = -1
-    previous_blank = False
-    new_para = False
     for indent, line in indent_lines:
-        blank = len(line) == 0
-        indented = indent != previous_indent
-        new_para = previous_blank or indented or new_para
-        if True: #len(line) > 0:
-            if new_para:
-                paragraph = (indent, [])
-                result.append(paragraph)
-                new_para = False
-            else:
-                paragraph = result[-1]
-            paragraph[1].append(line)
+        if indent != previous_indent:
+            paragraph = (indent, [])
+            result.append(paragraph)
+        else:
+            paragraph = result[-1]
+        paragraph[1].append(line)
         previous_indent = indent
-        previous_blank = blank
     return result
 
+def split_separated_lines(indent_paragraphs):
+    result = []
+    for indent, paragraph in indent_paragraphs:
+        result.append((indent, []))
+
+        if len(paragraph) > 0:
+            result[-1][1].append(paragraph[0])
+
+        if len(paragraph) > 2:
+            for line in paragraph[1: -1]:
+                result[-1][1].append(line)
+                if len(line) == 0:
+                    result.append((indent, []))
+
+        if len(paragraph) > 1:
+            result[-1][1].append(paragraph[-1])
+
+    return result
+
+def remove_empty_paragraphs(indent_paragraphs):
+    return [(indent, paragraph) for indent, paragraph in indent_paragraphs if len(paragraph)]
 
 def first_paragraph_indent(indent_texts):
     '''Fix the indentation on the first paragraph.
@@ -333,10 +344,28 @@ def determine_opening_indent(indent_texts):
     Returns:
         The opening indent level as an integer.
     '''
-    for indent, text in indent_texts:
-        if indent > 0 and text:
-            return indent
-    return 0
+    num_lines = len(indent_texts)
+
+    if num_lines < 1:
+        return 0
+
+    assert num_lines >= 1
+
+    first_line_indent  = indent_texts[0][0]
+
+    if num_lines == 1:
+        return first_line_indent
+
+    assert num_lines >= 2
+
+    second_line_indent = indent_texts[1][0]
+    second_line_text   = indent_texts[1][1]
+
+    if len(second_line_text) == 0:
+        return first_line_indent
+
+    return second_line_indent
+
 
 
 def rewrite_autodoc(app, what, name, obj, options, lines):
@@ -368,7 +397,7 @@ def rewrite_autodoc(app, what, name, obj, options, lines):
     try:
         lines[:] = parse_hieroglyph_text(lines)
     except:
-        print "lines =", copy
+        print("lines =", copy)
         raise
 
 

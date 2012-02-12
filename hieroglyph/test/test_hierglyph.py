@@ -69,8 +69,8 @@ class FirstParagraphIndentTests(unittest.TestCase):
         source   = [(0, "This is the first paragraph"),
                     (0, ""),
                     (4, "This is the second paragraph")]
-        expected = [(4, "This is the first paragraph"),
-                    (4, ""),
+        expected = [(0, "This is the first paragraph"),
+                    (0, ""),
                     (4, "This is the second paragraph")]
         actual = first_paragraph_indent(source)
         self.assertEqual(actual, expected)
@@ -89,8 +89,8 @@ class FirstParagraphIndentTests(unittest.TestCase):
         source   = [(0, "The first line"),
                     (0, ""),
                     (4, "The third line")]
-        expected = [(4, "The first line"),
-                    (4, ""),
+        expected = [(0, "The first line"),
+                    (0, ""),
                     (4, "The third line")]
         actual = first_paragraph_indent(source)
         self.assertEqual(actual, expected)
@@ -106,7 +106,7 @@ class FirstParagraphIndentTests(unittest.TestCase):
         self.assertEqual(actual, expected)
 
 class GatherLinesTests(unittest.TestCase):
-    
+
     def test_empty(self):
         source   = []
         expected = []
@@ -167,3 +167,62 @@ class GatherLinesTests(unittest.TestCase):
         actual = gather_lines(source)
         self.assertEqual(actual, expected)
 
+    def test_dedented_lines(self):
+        source   = [(4, 'First line'),
+                    (0, 'Second line')]
+        expected = [(4, ['First line']),
+                    (0, ['Second line'])]
+        actual = gather_lines(source)
+        self.assertEqual(actual, expected)
+
+    def test_indented_multi_lines(self):
+        source   = [(0, 'First line'),
+                    (0, 'Second line'),
+                    (4, 'Third line'),
+                    (4, 'Fourth line')]
+        expected = [(0, ['First line',
+                         'Second line']),
+                    (4, ['Third line',
+                         'Fourth line'])]
+        actual = gather_lines(source)
+        self.assertEqual(actual, expected)
+
+    def test_dedented_multi_lines(self):
+        source   = [(4, 'First line'),
+                    (4, 'Second line'),
+                    (0, 'Third line'),
+                    (0, 'Fourth line')]
+        expected = [(4, ['First line',
+                         'Second line']),
+                    (0, ['Third line',
+                         'Fourth line'])]
+        actual = gather_lines(source)
+        self.assertEqual(actual, expected)
+
+    def test_indented_separated_multi_lines(self):
+        source   = [(0, 'First line'),
+                    (0, 'Second line'),
+                    (0, ''),
+                    (4, 'Fourth line'),
+                    (4, 'Fifth line')]
+        expected = [(0, ['First line',
+                         'Second line',
+                         '']),
+                    (4, ['Fourth line',
+                         'Fifth line'])]
+        actual = gather_lines(source)
+        self.assertEqual(actual, expected)
+
+    def test_dedented_separated_multi_lines(self):
+        source   = [(4, 'First line'),
+                    (4, 'Second line'),
+                    (4, ''),
+                    (0, 'Fourth line'),
+                    (0, 'Fifth line')]
+        expected = [(4, ['First line',
+                         'Second line',
+                         '']),
+                    (0, ['Fourth line',
+                         'Fifth line'])]
+        actual = gather_lines(source)
+        self.assertEqual(actual, expected)

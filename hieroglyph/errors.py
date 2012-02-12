@@ -1,8 +1,9 @@
-from exceptions import Exception
+
+from sphinx.errors import ExtensionError
 
 __author__ = 'rjs'
 
-class HieroglyphError(Exception):
+class HieroglyphError(ExtensionError):
     '''
     An exception type specific to the Hieroglyph Sphinx extension.
     '''

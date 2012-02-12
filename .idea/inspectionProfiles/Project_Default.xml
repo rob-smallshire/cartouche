@@ -2,6 +2,11 @@
   <profile version="1.0" is_locked="false">
     <option name="myName" value="Project Default" />
     <option name="myLocal" value="false" />
+    <inspection_tool class="PyCompatibilityInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="fromVersion" value="2.6" />
+      <option name="toVersion" value="3.2" />
+    </inspection_tool>
+    <inspection_tool class="PySimplifyBooleanCheckInspection" enabled="true" level="INFO" enabled_by_default="true" />
     <inspection_tool class="PySingleQuotedDocstringInspection" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>
 </component>
