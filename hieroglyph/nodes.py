@@ -17,6 +17,7 @@ class Node(object):
 
         self.children = []
 
+    #indent = property(lambda self: return self._indent)
 
     def add_child(self, child):
         assert(child.parent is self)
