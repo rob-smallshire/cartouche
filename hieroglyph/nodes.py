@@ -13,11 +13,11 @@ class Node(object):
         else:
             self.lines = []
 
-        self.parent = parent
+        self._parent = parent
 
         self.children = []
 
-    #indent = property(lambda self: return self._indent)
+    parent = property(lambda self: self._parent)
 
     def add_child(self, child):
         assert(child.parent is self)
@@ -25,7 +25,7 @@ class Node(object):
 
 
     def __repr__(self):
-        return "Node(" + str(self.indent) + ", " + str(self.lines) + ", children=" + str(self.children) + ")"
+        return "Node(" + repr(self.indent) + ", " + repr(self.lines) + ", children=" + repr(self.children) + ")"
 
 
     def render_rst(self):
@@ -48,7 +48,7 @@ class Arg(Node):
 
 
     def __repr__(self):
-        return "Arg(" + str(self.name) + ", " + str(self.type) + ", children=" + str(self.children) + ")"
+        return "Arg(" + repr(self.name) + ", " + repr(self.type) + ", children=" + repr(self.children) + ")"
 
 
     def render_rst(self):

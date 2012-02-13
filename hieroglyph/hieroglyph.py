@@ -367,6 +367,7 @@ def determine_opening_indent(indent_texts):
     return second_line_indent
 
 
+
 def rewrite_autodoc(app, what, name, obj, options, lines):
     '''Convert lines from Hieroglyph to Sphinx format.
 
