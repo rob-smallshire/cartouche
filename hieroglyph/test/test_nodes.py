@@ -44,7 +44,52 @@ class NodeTests(unittest.TestCase):
         self.assertIs(node.children[0], child0)
         self.assertIs(node.children[1], child1)
 
-    # TODO test_render_rst
+    def test_render_rst_empty(self):
+        node = Node()
+        rst = node.render_rst()
+        self.assertEqual(len(rst), 0)
+
+    def test_render_rst_indent(self):
+        node = Node(indent=4)
+        rst = node.render_rst()
+        self.assertEqual(len(rst), 0)
+
+    def test_render_rst_lines(self):
+        node = Node(lines= ['First',
+                            'Second',
+                            'Third'])
+        rst = node.render_rst()
+        self.assertEqual(rst, ['First',
+                               'Second',
+                               'Third'])
+
+    def test_render_rst_indented_lines(self):
+        node = Node(indent=3, lines= ['First',
+                                      'Second',
+                                      'Third'])
+        rst = node.render_rst()
+        self.assertEqual(rst, ['   First',
+                               '   Second',
+                               '   Third'])
+
+    def test_render_rst_with_child(self):
+        node = Node(indent=4, lines=["Parent"])
+        child = Node(indent=8, lines=["Child"], parent=node)
+        node.add_child(child)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['    Parent',
+                               '        Child'])
+
+    def test_render_rst_with_children(self):
+        node = Node(indent=4, lines=["Parent"])
+        child_a = Node(indent=8, lines=["ChildA"], parent=node)
+        node.add_child(child_a)
+        child_b = Node(indent=6, lines=["ChildB"], parent=node)
+        node.add_child(child_b)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['    Parent',
+                               '        ChildA',
+                               '      ChildB'])
 
 
 class ArgTests(unittest.TestCase):
@@ -78,7 +123,7 @@ class ArgTests(unittest.TestCase):
         expected = "Arg('foo', None, children=[])"
         self.assertEqual(expected, actual)
 
-    # TODO test_render_rst
+
 
 
 class RaisesTests(unittest.TestCase):
