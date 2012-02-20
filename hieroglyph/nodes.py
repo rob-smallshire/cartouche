@@ -85,7 +85,7 @@ class Arg(Node):
 class Raises(Node):
 
     def __repr__(self):
-        return "Raises(" + str(self.indent) + ", " + str(self.lines) + ", children=" + str(self.children) + ")"
+        return "Raises(" + repr(self.indent) + ", " + repr(self.lines) + ", children=" + repr(self.children) + ")"
 
 
     def render_rst(self):
@@ -109,7 +109,7 @@ class Except(Node):
 
 
     def __repr__(self):
-        return "Except(" + str(self.type) + ", children=" + str(self.children) + ")"
+        return "Except(" + repr(self.type) + ", children=" + repr(self.children) + ")"
 
 
     def render_rst(self, only_child=False):
@@ -123,7 +123,6 @@ class Except(Node):
             description.extend(child_lines)
 
         dedent = self.child_indent - self.indent
-
         bullet = '* ' if not only_child else ''
 
         result.append("{indent}{bullet}{type} - {first_description}".format(indent=indent,
@@ -131,25 +130,23 @@ class Except(Node):
                         first_description=description[0].lstrip()))
 
         dedented_body = [' ' * len(bullet) + line[dedent:] for line in description[1:]]
-
         result.extend(dedented_body)
-
         ensure_terminal_blank(result)
 
         return result
 
 
 
-class TitleNode(Node):
+class Returns(Node):
 
-    def __init__(self, title, indent):
-        super(TitleNode, self).__init__(indent=indent)
-        self.title = title
+    def __init__(self, indent):
+        super(Returns, self).__init__(indent=indent)
+        self.title = 'Returns'
         self.line = ''
 
 
     def __repr__(self):
-        return self.title + "(children=" + str(self.children) + ")"
+        return "Returns(" + str(self.indent) + ", children=" + str(self.children) + ")"
 
 
     def render_rst(self):
@@ -172,15 +169,8 @@ class TitleNode(Node):
 
     def render_title(self, description, indent, result):
         result.append(
-            "{indent}:{role}: {first_description}".format(indent=indent,
-               role=self.title.lower(), first_description=description[0].lstrip()))
-
-
-
-class Returns(TitleNode):
-
-    def __init__(self, indent):
-        super(Returns, self).__init__(title='Returns', indent=indent)
+            "{indent}:returns: {first_description}".format(indent=indent,
+               first_description=description[0].lstrip()))
 
 
 
@@ -190,7 +180,7 @@ class Warning(Node):
         super(Warning, self).__init__(indent=indent)
 
     def __repr__(self):
-        return "Warning(children=" + str(self.children) + ")"
+        return "Warning(" + repr(self.indent) + ", children=" + str(self.children) + ")"
 
     def render_rst(self):
         # TODO: Factor out the commonality between this and Note below
@@ -228,7 +218,7 @@ class Note(Node):
 
 
     def __repr__(self):
-        return "Note(children=" + str(self.children) + ")"
+        return "Note(" + repr(self.indent) + ", children=" + str(self.children) + ")"
 
 
     def render_rst(self):
