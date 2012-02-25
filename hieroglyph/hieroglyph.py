@@ -185,15 +185,18 @@ def convert_raises(node):
 
 RAISE_REGEX = re.compile(r'(\w+)\s*:\s*(.*)')
 
+def extract_exception_type_and_text(line):
+    m = RAISE_REGEX.match(line)
+    if m is None:
+        raise HieroglyphError("Invalid hieroglyph exception syntax")
+    return (m.group(2), m.group(1))
+
+
 def append_child_to_raise_node(child, group_node):
     exception = None
     non_empty_lines = (line for line in child.lines if line)
     for line in non_empty_lines:
-        m = RAISE_REGEX.match(line)
-        if m is None:
-            raise HieroglyphError("Invalid hieroglyph exception syntax")
-        exception_type = m.group(1)
-        exception_text = m.group(2)
+        exception_text, exception_type = extract_exception_type_and_text(line)
 
         exception = Except(child.indent, exception_type)
         group_node.children.append(exception) # TODO: Could use parent here.
