@@ -195,15 +195,14 @@ def append_child_to_raise_node(child, group_node):
         exception_type = m.group(1)
         exception_text = m.group(2)
 
-        exception = Except(group_node.indent, child.indent, exception_type)
-        group_node.children.append(exception)
+        exception = Except(child.indent, exception_type)
+        group_node.children.append(exception) # TODO: Could use parent here.
 
         if exception_text is not None:
-            exception.children.append( Node(group_node.indent,
+            exception.children.append( Node(child.indent,
                                             [exception_text], exception))
     if exception is not None:
-        last_child = exception.children[-1] if len(
-            exception.children) != 0 else exception
+        last_child = exception.children[-1] if len(exception.children) != 0 else exception
         for grandchild in child.children:
             last_child.children.append(grandchild)
 

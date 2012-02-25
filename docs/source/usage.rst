@@ -186,7 +186,7 @@ to correspond to an actual Python type::
       color (tuple of integers): An RGB tuple with values in the range 0-255.
 
 It's possible to use almost any reStructuredText or Sphinx formatting in
-combination with Hieroglyph within the text.
+combination with Hieroglyph in the body text.
 
 Return and Returns
 ------------------

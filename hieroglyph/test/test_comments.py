@@ -357,7 +357,7 @@ All of the source sequence will be consumed.
             * ValueError - If this Queryable has been closed.
 
             * TypeError - If either collection_selector or result_selector are not
-              callable.
+                callable.
         """
         source_lines = source.splitlines()
         actual_lines = parse_hieroglyph_text(source_lines)
@@ -464,7 +464,7 @@ All of the source sequence will be consumed.
 
         :raises:
             PerforceError - If the command could not be run or if the command
-            reported an error.
+                reported an error.
 
 """
 
@@ -549,7 +549,7 @@ All of the source sequence will be consumed.
             * ValueError - If this Queryable has been closed.
 
             * TypeError - If either collection_selector or result_selector are not
-              callable.
+                callable.
         """
         source_lines = source.splitlines()
         actual_lines = parse_hieroglyph_text(source_lines)
