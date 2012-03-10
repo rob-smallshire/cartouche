@@ -95,26 +95,25 @@ class NodeTests(unittest.TestCase):
 class ArgTests(unittest.TestCase):
 
     def test_create(self):
-        node = Arg(5, 10, 'foo')
+        node = Arg(5, 'foo')
         self.assertEqual(node.indent, 5)
-        self.assertEqual(node.child_indent, 10)
         self.assertEqual(node.name, 'foo')
         self.assertEqual(node.lines, [])
         self.assertIsNone(node.parent)
 
     def test_set_type(self):
-        node = Arg(5, 10, 'foo')
+        node = Arg(5, 'foo')
         node.type = 'str'
         self.assertEqual(node.type, 'str')
 
     def test_add_one_child(self):
-        node = Arg(5, 10, 'foo')
+        node = Arg(5, 'foo')
         child = Node(parent=node)
         node.add_child(child)
         self.assertIs(node.children[0], child)
 
     def test_add_two_children(self):
-        node = Arg(5, 10, 'foo')
+        node = Arg(5, 'foo')
         child0 = Node(parent=node)
         child1 = Node(parent=node)
         node.add_child(child0)
@@ -123,19 +122,19 @@ class ArgTests(unittest.TestCase):
         self.assertIs(node.children[1], child1)
 
     def test_repr(self):
-        node = Arg(5, 10, 'foo')
+        node = Arg(5, 'foo')
         actual = repr(node)
         expected = "Arg('foo', None, children=[])"
         self.assertEqual(expected, actual)
 
     def test_render_rst_empty(self):
-        node = Arg(5, 10, 'bar')
+        node = Arg(5, 'bar')
         rst = node.render_rst()
         self.assertEqual(rst, ['     :param bar: ',
                                ''])
 
     def test_render_rst_with_child(self):
-        node = Arg(5, 10, 'bar')
+        node = Arg(5, 'bar')
         child = Node(indent=10, lines=["Description"], parent=node)
         node.add_child(child)
         rst = node.render_rst()
@@ -143,18 +142,18 @@ class ArgTests(unittest.TestCase):
                                ''])
 
     def test_render_rst_with_children(self):
-        node = Arg(5, 10, 'bar')
+        node = Arg(5, 'bar')
         child_a = Node(indent=10, lines=["ChildA"], parent=node)
         node.add_child(child_a)
         child_b = Node(indent=10, lines=["ChildB"], parent=node)
         node.add_child(child_b)
         rst = node.render_rst()
         self.assertEqual(rst, ['     :param bar: ChildA',
-                               '     ChildB',
+                               '          ChildB',
                                ''])
 
     def test_render_rst_with_type(self):
-        node = Arg(5, 10, 'bar')
+        node = Arg(5, 'bar')
         node.type = 'str'
         rst = node.render_rst()
         self.assertEqual(rst, ['     :param bar: ',
@@ -321,7 +320,36 @@ class ReturnsTests(unittest.TestCase):
         expected = "Returns(5, children=[])"
         self.assertEqual(expected, actual)
 
-    # TODO test_render_rst
+    def test_render_rst_empty(self):
+        node = Returns(indent=4)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['    :returns: ',
+                               ''])
+
+    def test_render_rst_indent(self):
+        node = Returns(indent=5)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     :returns: ',
+                               ''])
+
+    def test_render_rst_with_child(self):
+        node = Returns(indent=5)
+        child = Node(indent=10, lines=["Description"], parent=node)
+        node.add_child(child)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     :returns: Description',
+                               ''])
+
+    def test_render_rst_with_children(self):
+        node = Returns(indent=5)
+        child_a = Node(indent=10, lines=["ChildA"], parent=node)
+        node.add_child(child_a)
+        child_b = Node(indent=10, lines=["ChildB"], parent=node)
+        node.add_child(child_b)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     :returns: ChildA',
+                               '          ChildB',
+                               ''])
 
 class WarningTests(unittest.TestCase):
 

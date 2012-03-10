@@ -46,10 +46,10 @@ class CommentTests(unittest.TestCase):
         :param big_table: An open Bigtable Table instance.
 
         :param keys: A sequence of strings representing the key of each table row
-            to fetch.
+                to fetch.
 
         :param other_silly_variable: Another optional variable, that has a much
-            longer name than the other args, and which does nothing.
+                longer name than the other args, and which does nothing.
 
         :type other_silly_variable: str
 
@@ -107,8 +107,8 @@ class CommentTests(unittest.TestCase):
             This method uses immediate execution.
 
         :param predicate: An optional single argument function used to test each
-            elements. If omitted, the bool() function is used resulting in
-            the elements being tested directly.
+                elements. If omitted, the bool() function is used resulting in
+                the elements being tested directly.
 
         :returns: True if all elements in the sequence meet the predicate condition,
             otherwise False.
@@ -158,8 +158,8 @@ class CommentTests(unittest.TestCase):
             This method uses immediate execution.
 
         :param predicate: An optional single argument function used to test each
-            elements. If omitted, the bool() function is used resulting in
-            the elements being tested directly.
+                elements. If omitted, the bool() function is used resulting in
+                the elements being tested directly.
 
         :returns: True if all elements in the sequence meet the predicate condition,
             otherwise False.
@@ -209,8 +209,8 @@ All of the source sequence will be consumed.
     This method uses immediate execution.
 
 :param predicate: An optional single argument function used to test each
-    elements. If omitted, the bool() function is used resulting in
-    the elements being tested directly.
+        elements. If omitted, the bool() function is used resulting in
+        the elements being tested directly.
 
 :returns: True if all elements in the sequence meet the predicate condition,
     otherwise False.
@@ -271,8 +271,8 @@ All of the source sequence will be consumed.
         expected = """A convenience factory for creating Records.
 
 :param \*\*kwargs: Each keyword argument will be used to initialise an
-   attribute with the same name as the argument and the given
-   value.
+       attribute with the same name as the argument and the given
+       value.
 
 :returns: A Record which has a named attribute for each of the keyword arguments.
 
@@ -332,20 +332,20 @@ All of the source sequence will be consumed.
             This method uses deferred execution.
 
         :param collection_selector: A unary function mapping each element of the
-            source iterable into an intermediate sequence. The single
-            argument of the collection_selector is the value of an element
-            from the source sequence. The return value should be an
-            iterable derived from that element value. The default
-            collection_selector, which is the identity function, assumes
-            that each element of the source sequence is itself iterable.
+                source iterable into an intermediate sequence. The single
+                argument of the collection_selector is the value of an element
+                from the source sequence. The return value should be an
+                iterable derived from that element value. The default
+                collection_selector, which is the identity function, assumes
+                that each element of the source sequence is itself iterable.
 
         :param result_selector: An optional unary function mapping the elements in
-            the flattened intermediate sequence to corresponding elements
-            of the result sequence. The single argument of the
-            result_selector is the value of an element from the flattened
-            intermediate sequence. The return value should be the
-            corresponding value in the result sequence. The default
-            result_selector is the identity function.
+                the flattened intermediate sequence to corresponding elements
+                of the result sequence. The single argument of the
+                result_selector is the value of an element from the flattened
+                intermediate sequence. The return value should be the
+                corresponding value in the result sequence. The default
+                result_selector is the identity function.
 
         :returns: A Queryable over a generated sequence whose elements are the result
             of applying the one-to-many collection_selector to each element of
@@ -384,8 +384,8 @@ All of the source sequence will be consumed.
         expected = """A convenience factory for creating Records.
 
         :param \*\*kwargs: Each keyword argument will be used to initialise an
-            attribute with the same name as the argument and the given
-            value.
+                attribute with the same name as the argument and the given
+                value.
 
         :returns: A Record which has a named attribute for each of the keyword arguments.
 
@@ -456,7 +456,7 @@ All of the source sequence will be consumed.
           p4('fstat', '-T', 'depotFile', 'foo.h')
 
         :param args: The arguments to the p4 command as a list of objects which will
-            be converted to strings.
+                be converted to strings.
 
         :returns: A dictionary of lists where each key in the dictionary is the field name
             from the command output, and each value is a list of output lines in
@@ -524,20 +524,20 @@ All of the source sequence will be consumed.
             This method may explode at short notice.
 
         :param collection_selector: A unary function mapping each element of the
-            source iterable into an intermediate sequence. The single
-            argument of the collection_selector is the value of an element
-            from the source sequence. The return value should be an
-            iterable derived from that element value. The default
-            collection_selector, which is the identity function, assumes
-            that each element of the source sequence is itself iterable.
+                source iterable into an intermediate sequence. The single
+                argument of the collection_selector is the value of an element
+                from the source sequence. The return value should be an
+                iterable derived from that element value. The default
+                collection_selector, which is the identity function, assumes
+                that each element of the source sequence is itself iterable.
 
         :param result_selector: An optional unary function mapping the elements in
-            the flattened intermediate sequence to corresponding elements
-            of the result sequence. The single argument of the
-            result_selector is the value of an element from the flattened
-            intermediate sequence. The return value should be the
-            corresponding value in the result sequence. The default
-            result_selector is the identity function.
+                the flattened intermediate sequence to corresponding elements
+                of the result sequence. The single argument of the
+                result_selector is the value of an element from the flattened
+                intermediate sequence. The return value should be the
+                corresponding value in the result sequence. The default
+                result_selector is the identity function.
 
         :returns: A Queryable over a generated sequence whose elements are the result
             of applying the one-to-many collection_selector to each element of

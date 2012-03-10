@@ -131,7 +131,7 @@ def append_child_to_args_group_node(child, group_node, indent):
         param_type = m.group(3)
         param_text = m.group(4)
 
-        arg = Arg(indent, child.indent, param_name)
+        arg = Arg(indent, param_name)
         group_node.children.append(arg)
         arg.type = param_type
 
@@ -185,7 +185,15 @@ def convert_raises(node):
 
 RAISE_REGEX = re.compile(r'(\w+)\s*:\s*(.*)')
 
-def extract_exception_type_and_text(line):
+def parse_exception(line):
+    '''Parse the first line of a Hieroglyph exception description.
+
+    Args:
+        line (str): A single line Hieroglyph exception description.
+
+    Returns:
+        A 2-tuple containing the exception type and the first line of the description.
+    '''
     m = RAISE_REGEX.match(line)
     if m is None:
         raise HieroglyphError("Invalid hieroglyph exception syntax")
@@ -196,7 +204,7 @@ def append_child_to_raise_node(child, group_node):
     exception = None
     non_empty_lines = (line for line in child.lines if line)
     for line in non_empty_lines:
-        exception_text, exception_type = extract_exception_type_and_text(line)
+        exception_text, exception_type = parse_exception(line)
 
         exception = Except(child.indent, exception_type)
         group_node.children.append(exception) # TODO: Could use parent here.

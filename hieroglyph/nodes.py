@@ -40,9 +40,8 @@ class Node(object):
 
 class Arg(Node):
 
-    def __init__(self, indent, child_indent, name):
+    def __init__(self, indent, name):
         super(Arg, self).__init__(indent)
-        self.child_indent = child_indent
         self.name = name
         self.type = None
 
@@ -61,8 +60,6 @@ class Arg(Node):
             child_lines = child.render_rst()
             description.extend(child_lines)
 
-        dedent = self.child_indent - self.indent
-
         name = self.name.replace('*', r'\*')
 
         first_description = description[0].lstrip() if len(description) else ''
@@ -73,9 +70,7 @@ class Arg(Node):
         result.append("{indent}:param {name}: {first_description}".format(indent=indent, name=name,
                         first_description=first_description))
 
-        dedented_body = [line[dedent:] for line in description[1:]]
-
-        result.extend(dedented_body)
+        result.extend(description[1:])
 
         # If a type was specified render the type
         if self.type is not None:
@@ -131,16 +126,16 @@ class Except(Node):
             child_lines = child.render_rst()
             description.extend(child_lines)
 
-        #dedent = self.child_indent - self.indent
         bullet = '* ' if not only_child else ''
 
         first_description = description[0].lstrip() if len(description) else ''
+        if not first_description:
+            # TODO: Emit a warning about a missing argument description
+            pass
         result.append("{indent}{bullet}{type} - {first_description}".format(indent=indent,
                         bullet=bullet, type=self.type,
                         first_description=first_description))
 
-        #dedented_body = [' ' * len(bullet) + line[dedent:] for line in description[1:]]
-        #result.extend(dedented_body)
         result.extend(description[1:])
         ensure_terminal_blank(result)
 
@@ -179,9 +174,10 @@ class Returns(Node):
 
 
     def render_title(self, description, indent, result):
+        first_description = description[0].lstrip() if len(description) else ''
         result.append(
             "{indent}:returns: {first_description}".format(indent=indent,
-               first_description=description[0].lstrip()))
+               first_description=first_description))
 
 
 
