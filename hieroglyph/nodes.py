@@ -185,9 +185,12 @@ class Warning(Node):
 
     def __init__(self, indent):
         super(Warning, self).__init__(indent=indent)
+        self.line = '' # TODO: Can't we use self.lines in the superclass for this?
+
 
     def __repr__(self):
         return "Warning(" + repr(self.indent) + ", children=" + str(self.children) + ")"
+
 
     def render_rst(self, *args, **kwargs):
         # TODO: Factor out the commonality between this and Note below
@@ -221,7 +224,7 @@ class Note(Node):
 
     def __init__(self, indent):
         super(Note, self).__init__(indent=indent)
-        self.line = ''
+        self.line = ''  # TODO: Can't we use self.lines in the superclass for this?
 
 
     def __repr__(self):

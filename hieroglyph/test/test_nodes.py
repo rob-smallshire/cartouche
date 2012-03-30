@@ -359,6 +359,8 @@ class WarningTests(unittest.TestCase):
         self.assertEqual(node.lines, [])
         self.assertIsNone(node.parent)
 
+    # TODO: test when setting node.line
+
     def test_add_one_child(self):
         node = Warning(5)
         child = Node(parent=node)
@@ -380,7 +382,44 @@ class WarningTests(unittest.TestCase):
         expected = "Warning(5, children=[])"
         self.assertEqual(expected, actual)
 
-        # TODO test_render_rst
+    def test_render_rst_empty(self):
+        node = Warning(indent=4)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['    .. warning::',
+                               '    '])
+
+    def test_render_rst_indent(self):
+        node = Warning(indent=5)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     .. warning::',
+                               '     '])
+
+    # TODO: The contents of this next test are just downright weird!
+    # TODO: Why would we want to produce this?!
+    def test_render_rst_with_child(self):
+        node = Warning(indent=5)
+        child = Node(indent=10, lines=["Description"], parent=node)
+        node.add_child(child)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     .. warning::',
+                               '     ',
+                               '                   Description',
+                               ''])
+
+    # TODO: The contents of this next test are just downright weird!
+    # TODO: Why would we want to produce this?!
+    def test_render_rst_with_children(self):
+        node = Warning(indent=5)
+        child_a = Node(indent=10, lines=["ChildA"], parent=node)
+        node.add_child(child_a)
+        child_b = Node(indent=10, lines=["ChildB"], parent=node)
+        node.add_child(child_b)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     .. warning::',
+                               '     ',
+                               '                    ChildA',
+                               '          ChildB', # TODO: Check this indent level renders correctly
+                               ''])
 
 class NoteTests(unittest.TestCase):
 
@@ -390,11 +429,14 @@ class NoteTests(unittest.TestCase):
         self.assertEqual(node.lines, [])
         self.assertIsNone(node.parent)
 
+    # TODO: test when setting node.line
+
     def test_add_one_child(self):
         node = Note(5)
         child = Node(parent=node)
         node.add_child(child)
         self.assertIs(node.children[0], child)
+
 
     def test_add_two_children(self):
         node = Note(5)
