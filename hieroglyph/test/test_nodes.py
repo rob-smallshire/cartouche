@@ -394,8 +394,6 @@ class WarningTests(unittest.TestCase):
         self.assertEqual(rst, ['     .. warning::',
                                '     '])
 
-    # TODO: The contents of this next test are just downright weird!
-    # TODO: Why would we want to produce this?!
     def test_render_rst_with_child(self):
         node = Warning(indent=5)
         child = Node(indent=10, lines=["Description"], parent=node)
@@ -403,22 +401,20 @@ class WarningTests(unittest.TestCase):
         rst = node.render_rst()
         self.assertEqual(rst, ['     .. warning::',
                                '     ',
-                               '                   Description',
+                               '          Description',
                                ''])
 
-    # TODO: The contents of this next test are just downright weird!
-    # TODO: Why would we want to produce this?!
     def test_render_rst_with_children(self):
         node = Warning(indent=5)
         child_a = Node(indent=10, lines=["ChildA"], parent=node)
         node.add_child(child_a)
-        child_b = Node(indent=10, lines=["ChildB"], parent=node)
+        child_b = Node(indent=12, lines=["ChildB"], parent=node)
         node.add_child(child_b)
         rst = node.render_rst()
         self.assertEqual(rst, ['     .. warning::',
                                '     ',
-                               '                    ChildA',
-                               '          ChildB', # TODO: Check this indent level renders correctly
+                               '          ChildA',
+                               '            ChildB',
                                ''])
 
 class NoteTests(unittest.TestCase):
@@ -437,7 +433,6 @@ class NoteTests(unittest.TestCase):
         node.add_child(child)
         self.assertIs(node.children[0], child)
 
-
     def test_add_two_children(self):
         node = Note(5)
         child0 = Node(parent=node)
@@ -453,4 +448,44 @@ class NoteTests(unittest.TestCase):
         expected = "Note(5, children=[])"
         self.assertEqual(expected, actual)
 
-        # TODO test_render_rst
+    def test_repr(self):
+        node = Warning(5)
+        actual = repr(node)
+        expected = "Warning(5, children=[])"
+        self.assertEqual(expected, actual)
+
+    def test_render_rst_empty(self):
+        node = Note(indent=4)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['    .. note::',
+                               '    '])
+
+    def test_render_rst_indent(self):
+        node = Note(indent=5)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     .. note::',
+                               '     '])
+
+    def test_render_rst_with_child(self):
+        node = Note(indent=5)
+        child = Node(indent=10, lines=["Description"], parent=node)
+        node.add_child(child)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     .. note::',
+                               '     ',
+                               '          Description',
+                               ''])
+
+    def test_render_rst_with_children(self):
+        node = Note(indent=5)
+        child_a = Node(indent=10, lines=["ChildA"], parent=node)
+        node.add_child(child_a)
+        child_b = Node(indent=12, lines=["ChildB"], parent=node)
+        node.add_child(child_b)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     .. note::',
+                               '     ',
+                               '          ChildA',
+                               '            ChildB',
+                               ''])
+

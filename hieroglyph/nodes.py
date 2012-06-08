@@ -159,7 +159,7 @@ class Returns(Node):
         result = []
         indent = ' ' * self.indent
 
-        # Render the param description
+        # Render the return description
         description = [self.line] if self.line else []
         for child in self.children:
             child_lines = child.render_rst()
@@ -198,19 +198,10 @@ class Warning(Node):
         indent = ' ' * self.indent
 
         # Render the param description
-        description = [self.line] if self.line else []
+        description = [indent + '    ' + self.line] if self.line else []
         for child in self.children:
             child_lines = child.render_rst()
             description.extend(child_lines)
-
-        # Fix the indent on the first line
-        if len(description) > 1 and len(description[1].strip()) != 0:
-            body_indent = len(description[1]) - len(description[1].strip())
-        else:
-            body_indent = self.indent + 4
-
-        if len(description) > 0:
-            description[0] = ' ' * body_indent + description[0]
 
         result.append(indent + ".. warning::")
         result.append(indent + '')
@@ -237,19 +228,10 @@ class Note(Node):
         indent = ' ' * self.indent
 
         # Render the param description
-        description = [self.line] if self.line else []
+        description = [indent + '    ' + self.line] if self.line else []
         for child in self.children:
             child_lines = child.render_rst()
             description.extend(child_lines)
-
-        # Fix the indent on the first line
-        if len(description) > 1 and len(description[1].strip()) != 0:
-            body_indent = len(description[1]) - len(description[1].strip())
-        else:
-            body_indent = self.indent + 4
-
-        if len(description) > 0:
-            description[0] = ' ' * body_indent + description[0]
 
         result.append(indent + ".. note::")
         result.append(indent + '')
