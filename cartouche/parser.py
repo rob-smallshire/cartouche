@@ -415,7 +415,4 @@ def rewrite_autodoc(app, what, name, obj, options, lines):
     lines[:] = parse_hieroglyph_text(lines)
 
 
-def setup(app):
-    app.connect('autodoc-process-docstring', rewrite_autodoc)
-
 
