@@ -1,7 +1,7 @@
 # We only need to expose the setup function to Sphinx
 
 #noinspection PyUnresolvedReferences
-from .hieroglyph import setup
+from .parser import setup
 
 #noinspection PyUnresolvedReferences
 from .version import __version__

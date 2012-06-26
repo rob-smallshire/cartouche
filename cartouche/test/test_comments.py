@@ -2,7 +2,7 @@ import unittest
 
 from cartouche._portability import u
 
-from cartouche.hieroglyph import parse_hieroglyph_text
+from cartouche.parser import parse_hieroglyph_text
 from cartouche.errors import HieroglyphError
 
 class CommentTests(unittest.TestCase):

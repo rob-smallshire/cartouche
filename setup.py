@@ -2,7 +2,7 @@
 
 from setuptools import setup
 
-from hieroglyph import __version__ as version
+from cartouche import __version__ as version
 
 with open('README.txt', 'r') as readme:
     long_description = readme.read()
@@ -10,15 +10,15 @@ with open('README.txt', 'r') as readme:
 requires = ['Sphinx>=0.6']
 
 setup(
-    name='hieroglyph',
-    packages=['hieroglyph'],
+    name='cartouche',
+    packages=['cartouche'],
     version = "{version}".format(version=version),
-    url='http://code.google.com/p/hieroglyph/',
-    download_url="http://code.google.com/p/hieroglyph/downloads/detail?name=hieroglyph-{version}.tar.gz".format(version=version),
+    url='http://code.google.com/p/cartouche/',
+    download_url="http://code.google.com/p/cartouche/downloads/detail?name=cartouche-{version}.tar.gz".format(version=version),
     license='BSD',
     author='Robert Smallshire',
     author_email='robert@smallshire.org.uk',
-    description='Sphinx "hieroglyph" extension',
+    description='Sphinx "cartouche" extension',
     long_description=long_description,
     zip_safe=False,
     classifiers=[
