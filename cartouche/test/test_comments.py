@@ -3,7 +3,7 @@ import unittest
 from cartouche._portability import u
 
 from cartouche.parser import parse_hieroglyph_text
-from cartouche.errors import HieroglyphError
+from cartouche.errors import CartoucheError
 
 class CommentTests(unittest.TestCase):
 
@@ -416,7 +416,7 @@ All of the source sequence will be consumed.
                         u('    ValueError: If line does not have the expected form.'),
                         u('')]
 
-        self.assertRaises(HieroglyphError, lambda: parse_hieroglyph_text(source_lines))
+        self.assertRaises(CartoucheError, lambda: parse_hieroglyph_text(source_lines))
 
     def test_comment10(self):
         source = """
@@ -584,7 +584,7 @@ All of the source sequence will be consumed.
         """
 
         source_lines = source.splitlines()
-        self.assertRaises(HieroglyphError, lambda: parse_hieroglyph_text(source_lines))
+        self.assertRaises(CartoucheError, lambda: parse_hieroglyph_text(source_lines))
 
     def test_comment10(self):
         source = """

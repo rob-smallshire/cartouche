@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import re
 
-from .errors import HieroglyphError
+from .errors import CartoucheError
 
 from .nodes import (Node, Raises, Except, Note, Warning, Returns, Arg, Yields,
                    ensure_terminal_blank)
@@ -88,7 +88,7 @@ def extract_structure(parse_tree):
         docstring.
 
     Raises:
-        HieroglyphError: In the event that the parse tree cannot be understood.
+        CartoucheError: In the event that the parse tree cannot be understood.
     '''
     return convert_node(parse_tree)
 
@@ -129,7 +129,7 @@ def append_child_to_args_group_node(child, group_node, indent):
     for line in non_empty_lines:
         m = ARG_REGEX.match(line)
         if m is None:
-            raise HieroglyphError("Invalid cartouche argument syntax")
+            raise CartoucheError("Invalid cartouche argument syntax")
         param_name = m.group(1)
         param_type = m.group(3)
         param_text = m.group(4)
@@ -205,7 +205,7 @@ def parse_exception(line):
     '''
     m = RAISE_REGEX.match(line)
     if m is None:
-        raise HieroglyphError("Invalid cartouche exception syntax")
+        raise CartoucheError("Invalid cartouche exception syntax")
     return m.group(2), m.group(1)
 
 

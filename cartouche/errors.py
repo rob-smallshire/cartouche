@@ -3,8 +3,8 @@ from sphinx.errors import ExtensionError
 
 __author__ = 'rjs'
 
-class HieroglyphError(ExtensionError):
+class CartoucheError(ExtensionError):
     '''
-    An exception type specific to the Hieroglyph Sphinx extension.
+    An exception type specific to the Cartouche Sphinx extension.
     '''
     pass

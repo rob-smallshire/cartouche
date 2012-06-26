@@ -5,6 +5,6 @@ ratio of markup to content becomes too high and readability is compromised
 enough that the docstring becomes unsuitable for use with standard Python
 introspection mechanisms like help() or IDEs.
 
-Hieroglyph is an a Sphinx extension which automatically converts a highly
+Cartouche is an a Sphinx extension which automatically converts a highly
 readable docstring format suitable for use with help() and IDEs to the
 reStructuredText hieroglyphics required by Sphinx.
