@@ -195,10 +195,10 @@ def convert_raises(node):
 RAISE_REGEX = re.compile(r'(\w+)\s*:\s*(.*)')
 
 def parse_exception(line):
-    '''Parse the first line of a Hieroglyph exception description.
+    '''Parse the first line of a Cartouche exception description.
 
     Args:
-        line (str): A single line Hieroglyph exception description.
+        line (str): A single line Cartouche exception description.
 
     Returns:
         A 2-tuple containing the exception type and the first line of the description.
@@ -388,11 +388,11 @@ def determine_opening_indent(indent_texts):
 
 #noinspection PyUnusedLocal
 def rewrite_autodoc(app, what, name, obj, options, lines):
-    '''Convert lines from Hieroglyph to Sphinx format.
+    '''Convert lines from Cartouche to Sphinx format.
 
     The function to be called by the Sphinx autodoc extension when autodoc
     has read and processed a docstring. This function modified its
-    ``lines`` argument *in place* replacing Hieroglyph syntax input into
+    ``lines`` argument *in place* replacing Cartouche syntax input into
     Sphinx reStructuredText output.
 
     Args:

@@ -1,12 +1,12 @@
-.. Hieroglyph documentation master file, created by
+.. Cartouche documentation master file, created by
    sphinx-quickstart on Tue Nov 22 18:26:54 2011.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Hieroglyph
+Welcome to Cartouche
 =====================
 
-Hieroglyph is a Sphinx extension for transforming easy-to-read docstrings into
+Cartouche is a Sphinx extension for transforming easy-to-read docstrings into
 the reStructuredText consumed by Sphinx.
 
 Contents:
