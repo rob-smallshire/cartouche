@@ -3,7 +3,8 @@ from __future__ import print_function
 import re
 
 from errors import HieroglyphError
-from nodes import (Node, Raises, Except, Note, Warning, Returns, Arg,
+
+from nodes import (Node, Raises, Except, Note, Warning, Returns, Arg, Yields,
                    ensure_terminal_blank)
 
 __author__ = 'Robert Smallshire'
@@ -99,6 +100,8 @@ def convert_node(node):
         return convert_args(node)
     if node.lines[0].startswith('Returns:'):
         return convert_returns(node)
+    if node.lines[0].startswith('Yields:'):
+        return convert_yields(node)
     if node.lines[0].startswith('Raises:'):
         return convert_raises(node)
     if node.lines[0].startswith('Note:'):
@@ -158,6 +161,12 @@ def convert_returns(node):
     returns.children = node.children
     return returns
 
+def convert_yields(node):
+    assert node.lines[0].startswith('Yields:')
+    returns = Yields(node.indent)
+    returns.line = node.lines[0][8:].strip()
+    returns.children = node.children
+    return returns
 
 def convert_note(node):
     assert node.lines[0].startswith('Note:')

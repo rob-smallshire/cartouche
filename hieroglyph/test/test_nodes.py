@@ -1,5 +1,5 @@
 import unittest
-from hieroglyph.nodes import Node, Arg, Raises, Except, Returns, Warning, Note
+from hieroglyph.nodes import Node, Arg, Raises, Except, Returns, Warning, Note, Yields
 
 __author__ = 'Robert Smallshire'
 
@@ -342,6 +342,66 @@ class ReturnsTests(unittest.TestCase):
 
     def test_render_rst_with_children(self):
         node = Returns(indent=5)
+        child_a = Node(indent=10, lines=["ChildA"], parent=node)
+        node.add_child(child_a)
+        child_b = Node(indent=10, lines=["ChildB"], parent=node)
+        node.add_child(child_b)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     :returns: ChildA',
+                               '          ChildB',
+                               ''])
+
+class YieldsTests(unittest.TestCase):
+
+    def test_create(self):
+        node = Yields(5)
+        self.assertEqual(node.indent, 5)
+        self.assertEqual(node.lines, [])
+        self.assertIsNone(node.parent)
+
+    def test_add_one_child(self):
+        node = Yields(5)
+        child = Node(parent=node)
+        node.add_child(child)
+        self.assertIs(node.children[0], child)
+
+    def test_add_two_children(self):
+        node = Yields(5)
+        child0 = Node(parent=node)
+        child1 = Node(parent=node)
+        node.add_child(child0)
+        node.add_child(child1)
+        self.assertIs(node.children[0], child0)
+        self.assertIs(node.children[1], child1)
+
+    def test_repr(self):
+        node = Yields(5)
+        actual = repr(node)
+        expected = "Yields(5, children=[])"
+        self.assertEqual(expected, actual)
+
+    def test_render_rst_empty(self):
+        node = Yields(indent=4)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['    :returns: ',
+                               ''])
+
+    def test_render_rst_indent(self):
+        node = Yields(indent=5)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     :returns: ',
+                               ''])
+
+    def test_render_rst_with_child(self):
+        node = Yields(indent=5)
+        child = Node(indent=10, lines=["Description"], parent=node)
+        node.add_child(child)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     :returns: Description',
+                               ''])
+
+    def test_render_rst_with_children(self):
+        node = Yields(indent=5)
         child_a = Node(indent=10, lines=["ChildA"], parent=node)
         node.add_child(child_a)
         child_b = Node(indent=10, lines=["ChildB"], parent=node)

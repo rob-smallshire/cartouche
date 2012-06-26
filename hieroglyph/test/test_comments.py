@@ -584,3 +584,64 @@ All of the source sequence will be consumed.
         source_lines = source.splitlines()
         self.assertRaises(HieroglyphError, lambda: parse_hieroglyph_text(source_lines))
 
+    def test_comment10(self):
+        source = """
+        Execute the command described by concatenating the string function arguments
+        with the p4 -s global scripting flag and return the results in a dictionary.
+
+        For example, to run the command::
+
+          p4 -s fstat -T depotFile foo.h
+
+        call::
+
+          p4('fstat', '-T', 'depotFile', 'foo.h')
+
+        Args:
+            args: The arguments to the p4 command as a list of objects which will
+                be converted to strings.
+
+        Yields:
+            A dictionary of lists where each key in the dictionary is the field name
+            from the command output, and each value is a list of output lines in
+            order.
+
+        Raises:
+            PerforceError: If the command could not be run or if the command
+                reported an error.
+        """
+
+        expected = """
+        Execute the command described by concatenating the string function arguments
+        with the p4 -s global scripting flag and return the results in a dictionary.
+
+        For example, to run the command::
+
+          p4 -s fstat -T depotFile foo.h
+
+        call::
+
+          p4('fstat', '-T', 'depotFile', 'foo.h')
+
+        :param args: The arguments to the p4 command as a list of objects which will
+                be converted to strings.
+
+        :returns: A dictionary of lists where each key in the dictionary is the field name
+            from the command output, and each value is a list of output lines in
+            order.
+
+        :raises:
+            PerforceError - If the command could not be run or if the command
+                reported an error.
+
+"""
+
+        source_lines = source.splitlines()
+        actual_lines = parse_hieroglyph_text(source_lines)
+        expected_lines = expected.splitlines()
+        self.assertEqual(len(actual_lines), len(expected_lines))
+        for actual_line, result_line in zip(actual_lines, expected_lines):
+            if len(actual_line.strip()) == 0:
+                self.assertTrue(len(result_line.strip()) == 0)
+            else:
+                self.assertEqual(actual_line, result_line)

@@ -181,6 +181,44 @@ class Returns(Node):
 
 
 
+class Yields(Node):
+
+    def __init__(self, indent):
+        super(Yields, self).__init__(indent=indent)
+        self.title = 'Returns'
+        self.line = ''
+
+
+    def __repr__(self):
+        return "Yields(" + str(self.indent) + ", children=" + str(self.children) + ")"
+
+
+    def render_rst(self, *args, **kwargs):
+        result = []
+        indent = ' ' * self.indent
+
+        # Render the return description
+        description = [self.line] if self.line else []
+        for child in self.children:
+            child_lines = child.render_rst()
+            description.extend(child_lines)
+
+        self.render_title(description, indent, result)
+
+        result.extend(description[1:])
+
+        ensure_terminal_blank(result)
+        return result
+
+
+    def render_title(self, description, indent, result):
+        first_description = description[0].lstrip() if len(description) else ''
+        result.append(
+            "{indent}:returns: {first_description}".format(indent=indent,
+                first_description=first_description))
+
+
+
 class Warning(Node):
 
     def __init__(self, indent):
