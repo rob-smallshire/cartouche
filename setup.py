@@ -14,7 +14,7 @@ setup(
     packages=['cartouche'],
     version = "{version}".format(version=version),
     url='http://code.google.com/p/cartouche/',
-    download_url="http://code.google.com/p/cartouche/downloads/detail?name=cartouche-{version}.tar.gz".format(version=version),
+    download_url="http://code.google.com/p/cartouche/downloads/detail?name=cartouche-{version}.zip".format(version=version),
     license='BSD',
     author='Robert Smallshire',
     author_email='robert@smallshire.org.uk',
