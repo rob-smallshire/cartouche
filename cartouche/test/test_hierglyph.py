@@ -1,5 +1,5 @@
 import unittest
-from hieroglyph.hieroglyph import first_paragraph_indent, gather_lines, unindent
+from cartouche.hieroglyph import first_paragraph_indent, gather_lines, unindent
 
 __author__ = 'Robert Smallshire'
 

@@ -10,16 +10,16 @@ from .nodes import (Node, Raises, Except, Note, Warning, Returns, Arg, Yields,
 __author__ = 'Robert Smallshire'
 
 def parse_hieroglyph_text(lines):
-    '''Parse text in hieroglyph format and return a reStructuredText equivalent
+    '''Parse text in cartouche format and return a reStructuredText equivalent
 
     Args:
         lines: A sequence of strings representing the lines of a single
             docstring as read from the source by Sphinx. This string should be
-            in a format that can be parsed by hieroglyph.
+            in a format that can be parsed by cartouche.
 
     Returns:
         A list of lines containing the transformed docstring as
-        reStructuredText as produced by hieroglyph.
+        reStructuredText as produced by cartouche.
 
     Raises:
         RuntimeError: If the docstring cannot be parsed.
@@ -129,7 +129,7 @@ def append_child_to_args_group_node(child, group_node, indent):
     for line in non_empty_lines:
         m = ARG_REGEX.match(line)
         if m is None:
-            raise HieroglyphError("Invalid hieroglyph argument syntax")
+            raise HieroglyphError("Invalid cartouche argument syntax")
         param_name = m.group(1)
         param_type = m.group(3)
         param_text = m.group(4)
@@ -205,7 +205,7 @@ def parse_exception(line):
     '''
     m = RAISE_REGEX.match(line)
     if m is None:
-        raise HieroglyphError("Invalid hieroglyph exception syntax")
+        raise HieroglyphError("Invalid cartouche exception syntax")
     return m.group(2), m.group(1)
 
 

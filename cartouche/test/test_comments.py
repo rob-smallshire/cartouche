@@ -1,9 +1,9 @@
 import unittest
 
-from hieroglyph._portability import u
+from cartouche._portability import u
 
-from hieroglyph.hieroglyph import parse_hieroglyph_text
-from hieroglyph.errors import HieroglyphError
+from cartouche.hieroglyph import parse_hieroglyph_text
+from cartouche.errors import HieroglyphError
 
 class CommentTests(unittest.TestCase):
 

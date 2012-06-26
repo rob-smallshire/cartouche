@@ -1,5 +1,5 @@
 import unittest
-from hieroglyph.nodes import Node, Arg, Raises, Except, Returns, Warning, Note, Yields
+from cartouche.nodes import Node, Arg, Raises, Except, Returns, Warning, Note, Yields
 
 __author__ = 'Robert Smallshire'
 
