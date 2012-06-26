@@ -24,9 +24,9 @@ converted into reStructuredText equivalents before being passed along to Sphinx
 for rendering.
 
 The special blocks currently recognised by Cartouche are ``Args:``,
-``Returns:``, ``Return:``, ``Raises:``, ``Note:`` and ``Warning:``.  The order
+``Returns:``, ``Yields:``, ``Raises:``, ``Note:`` and ``Warning:``.  The order
 of the blocks is not significant, although most function docstrings will
-consist of a preamble following by  ``Args:``, ``Returns:`` and ``Raises:`` in
+consist of a preamble followed by  ``Args:``, ``Returns:`` and ``Raises:`` in
 that order.
 
 A typical docstring
