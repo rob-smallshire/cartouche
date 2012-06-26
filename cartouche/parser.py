@@ -9,7 +9,7 @@ from .nodes import (Node, Raises, Except, Note, Warning, Returns, Arg, Yields,
 
 __author__ = 'Robert Smallshire'
 
-def parse_hieroglyph_text(lines):
+def parse_cartouche_text(lines):
     '''Parse text in cartouche format and return a reStructuredText equivalent
 
     Args:
@@ -412,7 +412,7 @@ def rewrite_autodoc(app, what, name, obj, options, lines):
 
         lines: The lines of the docstring.  Will be modified *in place*.
     '''
-    lines[:] = parse_hieroglyph_text(lines)
+    lines[:] = parse_cartouche_text(lines)
 
 
 

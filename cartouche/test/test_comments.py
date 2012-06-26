@@ -2,7 +2,7 @@ import unittest
 
 from cartouche._portability import u
 
-from cartouche.parser import parse_hieroglyph_text
+from cartouche.parser import parse_cartouche_text
 from cartouche.errors import CartoucheError
 
 class CommentTests(unittest.TestCase):
@@ -70,7 +70,7 @@ class CommentTests(unittest.TestCase):
             IOError - An error occurred accessing the bigtable.Table object.
         """
         source_lines = source.splitlines()
-        actual_lines = parse_hieroglyph_text(source_lines)
+        actual_lines = parse_cartouche_text(source_lines)
         expected_lines = expected.splitlines()
         self.assertEqual(len(actual_lines), len(expected_lines))
         for actual_line, result_line in zip(actual_lines, expected_lines):
@@ -121,7 +121,7 @@ class CommentTests(unittest.TestCase):
             * TypeError - If predicate is not callable.
         """
         source_lines = source.splitlines()
-        actual_lines = parse_hieroglyph_text(source_lines)
+        actual_lines = parse_cartouche_text(source_lines)
         expected_lines = expected.splitlines()
         self.assertEqual(len(actual_lines), len(expected_lines))
         for actual_line, result_line in zip(actual_lines, expected_lines):
@@ -172,7 +172,7 @@ class CommentTests(unittest.TestCase):
             * TypeError - If predicate is not callable.
         """
         source_lines = source.splitlines()
-        actual_lines = parse_hieroglyph_text(source_lines)
+        actual_lines = parse_cartouche_text(source_lines)
         expected_lines = expected.splitlines()
         self.assertEqual(len(actual_lines), len(expected_lines))
         for actual_line, result_line in zip(actual_lines, expected_lines):
@@ -223,7 +223,7 @@ All of the source sequence will be consumed.
     * TypeError - If predicate is not callable.
 
 """
-        actual_lines = parse_hieroglyph_text(source_lines)
+        actual_lines = parse_cartouche_text(source_lines)
         expected_lines = expected.splitlines()
         self.assertEqual(len(actual_lines), len(expected_lines))
         for actual_line, result_line in zip(actual_lines, expected_lines):
@@ -249,7 +249,7 @@ All of the source sequence will be consumed.
 :returns: A Queryable over an empty sequence.
 
 """
-        actual_lines = parse_hieroglyph_text(source_lines)
+        actual_lines = parse_cartouche_text(source_lines)
         expected_lines = expected.splitlines()
         self.assertEqual(len(actual_lines), len(expected_lines))
         for actual_line, result_line in zip(actual_lines, expected_lines):
@@ -279,7 +279,7 @@ All of the source sequence will be consumed.
 :returns: A Record which has a named attribute for each of the keyword arguments.
 
 """
-        actual_lines = parse_hieroglyph_text(source_lines)
+        actual_lines = parse_cartouche_text(source_lines)
         expected_lines = expected.splitlines()
         self.assertEqual(len(actual_lines), len(expected_lines))
         for actual_line, result_line in zip(actual_lines, expected_lines):
@@ -362,7 +362,7 @@ All of the source sequence will be consumed.
                 callable.
         """
         source_lines = source.splitlines()
-        actual_lines = parse_hieroglyph_text(source_lines)
+        actual_lines = parse_cartouche_text(source_lines)
         expected_lines = expected.splitlines()
         self.assertEqual(len(actual_lines), len(expected_lines))
         for actual_line, result_line in zip(actual_lines, expected_lines):
@@ -393,7 +393,7 @@ All of the source sequence will be consumed.
 
 """
         source_lines = source.splitlines()
-        actual_lines = parse_hieroglyph_text(source_lines)
+        actual_lines = parse_cartouche_text(source_lines)
         expected_lines = expected.splitlines()
         self.assertEqual(len(actual_lines), len(expected_lines))
         for actual_line, result_line in zip(actual_lines, expected_lines):
@@ -416,7 +416,7 @@ All of the source sequence will be consumed.
                         u('    ValueError: If line does not have the expected form.'),
                         u('')]
 
-        self.assertRaises(CartoucheError, lambda: parse_hieroglyph_text(source_lines))
+        self.assertRaises(CartoucheError, lambda: parse_cartouche_text(source_lines))
 
     def test_comment10(self):
         source = """
@@ -471,7 +471,7 @@ All of the source sequence will be consumed.
 """
 
         source_lines = source.splitlines()
-        actual_lines = parse_hieroglyph_text(source_lines)
+        actual_lines = parse_cartouche_text(source_lines)
         expected_lines = expected.splitlines()
         self.assertEqual(len(actual_lines), len(expected_lines))
         for actual_line, result_line in zip(actual_lines, expected_lines):
@@ -554,7 +554,7 @@ All of the source sequence will be consumed.
                 callable.
         """
         source_lines = source.splitlines()
-        actual_lines = parse_hieroglyph_text(source_lines)
+        actual_lines = parse_cartouche_text(source_lines)
         expected_lines = expected.splitlines()
         self.assertEqual(len(actual_lines), len(expected_lines))
         for actual_line, result_line in zip(actual_lines, expected_lines):
@@ -584,7 +584,7 @@ All of the source sequence will be consumed.
         """
 
         source_lines = source.splitlines()
-        self.assertRaises(CartoucheError, lambda: parse_hieroglyph_text(source_lines))
+        self.assertRaises(CartoucheError, lambda: parse_cartouche_text(source_lines))
 
     def test_comment10(self):
         source = """
@@ -639,7 +639,7 @@ All of the source sequence will be consumed.
 """
 
         source_lines = source.splitlines()
-        actual_lines = parse_hieroglyph_text(source_lines)
+        actual_lines = parse_cartouche_text(source_lines)
         expected_lines = expected.splitlines()
         self.assertEqual(len(actual_lines), len(expected_lines))
         for actual_line, result_line in zip(actual_lines, expected_lines):
