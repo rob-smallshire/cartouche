@@ -2,9 +2,9 @@ from __future__ import print_function
 
 import re
 
-from errors import HieroglyphError
+from .errors import HieroglyphError
 
-from nodes import (Node, Raises, Except, Note, Warning, Returns, Arg, Yields,
+from .nodes import (Node, Raises, Except, Note, Warning, Returns, Arg, Yields,
                    ensure_terminal_blank)
 
 __author__ = 'Robert Smallshire'
@@ -206,7 +206,7 @@ def parse_exception(line):
     m = RAISE_REGEX.match(line)
     if m is None:
         raise HieroglyphError("Invalid hieroglyph exception syntax")
-    return (m.group(2), m.group(1))
+    return m.group(2), m.group(1)
 
 
 def append_child_to_raise_node(child, group_node):
@@ -386,7 +386,7 @@ def determine_opening_indent(indent_texts):
     return second_line_indent
 
 
-
+#noinspection PyUnusedLocal
 def rewrite_autodoc(app, what, name, obj, options, lines):
     '''Convert lines from Hieroglyph to Sphinx format.
 

@@ -1,5 +1,7 @@
 import unittest
 
+from hieroglyph._portability import u
+
 from hieroglyph.hieroglyph import parse_hieroglyph_text
 from hieroglyph.errors import HieroglyphError
 
@@ -180,25 +182,25 @@ class CommentTests(unittest.TestCase):
                 self.assertEqual(actual_line, result_line)
 
     def test_comment4(self):
-        source_lines = [u'Determine if all elements in the source sequence satisfy a condition.',
-                        u'',
-                        u'All of the source sequence will be consumed.',
-                        u'',
-                        u'Note: This method uses immediate execution.',
-                        u'',
-                        u'Args:',
-                        u'    predicate: An optional single argument function used to test each',
-                        u'        elements. If omitted, the bool() function is used resulting in',
-                        u'        the elements being tested directly.',
-                        u'',
-                        u'Returns:',
-                        u'    True if all elements in the sequence meet the predicate condition,',
-                        u'    otherwise False.',
-                        u'',
-                        u'Raises:',
-                        u'    ValueError: If the Queryable is closed()',
-                        u'    TypeError: If predicate is not callable.',
-                        u'']
+        source_lines = [u('Determine if all elements in the source sequence satisfy a condition.'),
+                        u(''),
+                        u('All of the source sequence will be consumed.'),
+                        u(''),
+                        u('Note: This method uses immediate execution.'),
+                        u(''),
+                        u('Args:'),
+                        u('    predicate: An optional single argument function used to test each'),
+                        u('        elements. If omitted, the bool() function is used resulting in'),
+                        u('        the elements being tested directly.'),
+                        u(''),
+                        u('Returns:'),
+                        u('    True if all elements in the sequence meet the predicate condition,'),
+                        u('    otherwise False.'),
+                        u(''),
+                        u('Raises:'),
+                        u('    ValueError: If the Queryable is closed()'),
+                        u('    TypeError: If predicate is not callable.'),
+                        u('')]
 
         expected = """Determine if all elements in the source sequence satisfy a condition.
 
@@ -231,12 +233,12 @@ All of the source sequence will be consumed.
                 self.assertEqual(actual_line, result_line)
 
     def test_comment5(self):
-        source_lines = [u'An empty Queryable.',
-                        u'',
-                        u'Note: The same empty instance will be returned each time.',
-                        u'',
-                        u'Returns: A Queryable over an empty sequence.',
-                        u'']
+        source_lines = [u('An empty Queryable.'),
+                        u(''),
+                        u('Note: The same empty instance will be returned each time.'),
+                        u(''),
+                        u('Returns: A Queryable over an empty sequence.'),
+                        u('')]
 
         expected = """An empty Queryable.
 
@@ -257,16 +259,16 @@ All of the source sequence will be consumed.
                 self.assertEqual(actual_line, result_line)
 
     def test_comment6(self):
-        source_lines = [u'A convenience factory for creating Records.',
-                        u'',
-                        u'Args:',
-                        u'    **kwargs: Each keyword argument will be used to initialise an',
-                        u'       attribute with the same name as the argument and the given',
-                        u'       value.',
-                        u'',
-                        u'Returns:',
-                        u'    A Record which has a named attribute for each of the keyword arguments.',
-                        u'']
+        source_lines = [u('A convenience factory for creating Records.'),
+                        u(''),
+                        u('Args:'),
+                        u('    **kwargs: Each keyword argument will be used to initialise an'),
+                        u('       attribute with the same name as the argument and the given'),
+                        u('       value.'),
+                        u(''),
+                        u('Returns:'),
+                        u('    A Record which has a named attribute for each of the keyword arguments.'),
+                        u('')]
 
         expected = """A convenience factory for creating Records.
 
@@ -401,18 +403,18 @@ All of the source sequence will be consumed.
                 self.assertEqual(actual_line, result_line)
 
     def test_comment9(self):
-        source_lines = [u'Parse a single line of a tree to determine depth and node.',
-                        u'',
-                        u'Args:',
-                        u'    This line is missing an argument name.',
-                        u'    ',
-                        u'Returns:',
-                        u'    A 2-tuple containing the tree 0 based tree depth as the first',
-                        u'    element and the node description as the second element.',
-                        u'',
-                        u'Raises:',
-                        u'    ValueError: If line does not have the expected form.',
-                        u'']
+        source_lines = [u('Parse a single line of a tree to determine depth and node.'),
+                        u(''),
+                        u('Args:'),
+                        u('    This line is missing an argument name.'),
+                        u('    '),
+                        u('Returns:'),
+                        u('    A 2-tuple containing the tree 0 based tree depth as the first'),
+                        u('    element and the node description as the second element.'),
+                        u(''),
+                        u('Raises:'),
+                        u('    ValueError: If line does not have the expected form.'),
+                        u('')]
 
         self.assertRaises(HieroglyphError, lambda: parse_hieroglyph_text(source_lines))
 

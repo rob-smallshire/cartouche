@@ -87,8 +87,6 @@ paragraphs each introduced by a heading which is the exception type.
 This docstring, when processed by Hieroglyph will result in the following
 reStructuredText markup::
 
-::
-
   Transforms each element of a sequence into a new form.
 
   Each element of the source is transformed through a selector function
@@ -267,4 +265,4 @@ or::
 
 .. _Google Python Style Guide: http://google-styleguide.googlecode.com/svn/trunk/pyguide.html#Comments
 
-.. asq: http://code.google.com/p/asq/
+.. _asq: http://code.google.com/p/asq/
