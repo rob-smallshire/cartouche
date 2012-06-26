@@ -1,0 +1,5 @@
+Version 0.9
+-----------
+* Changed the project name from Cartouche from Hieroglyph to avoid a naming clash.
+* Ensured Python 3 compatibility
+* Added support for Yields blocks.
