@@ -1,5 +1,5 @@
 Installing ``cartouche``
-=========================
+========================
 
 ``cartouche`` is available on the `Python Package Index`_ (PyPI) and can be
 installed with ``easy_install`` so long as you have `setuptools`_ installed
