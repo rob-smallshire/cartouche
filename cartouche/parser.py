@@ -192,7 +192,7 @@ def convert_raises(node):
     return group_node
 
 
-RAISE_REGEX = re.compile(r'(\w+)\s*:\s*(.*)')
+RAISE_REGEX = re.compile(r'([\w\.]+)\s*:\s*(.*)')
 
 def parse_exception(line):
     '''Parse the first line of a Cartouche exception description.
