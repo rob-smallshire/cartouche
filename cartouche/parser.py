@@ -17,8 +17,8 @@ RAISES_PATTERN = u(r'(?:[\*\+\-]\s+)?([\w\.]+)\s*:\s*(.*)')
 ARGS_REGEX = re.compile(ARGS_PATTERN)
 RAISES_REGEX = re.compile(RAISES_PATTERN)
 
-
-__author__ = 'Robert Smallshire'
+class CartoucheSyntaxError(CartoucheError):
+    pass
 
 def parse_cartouche_text(lines):
     '''Parse text in cartouche format and return a reStructuredText equivalent
@@ -140,7 +140,7 @@ def append_child_to_args_group_node(child, group_node, indent):
     for line in non_empty_lines:
         m = ARGS_REGEX.match(line)
         if m is None:
-            raise CartoucheError("Invalid cartouche argument syntax")
+            raise CartoucheSyntaxError('Cartouche: Invalid argument syntax "{line}" for Args block'.format(line=line))
         param_name = m.group(1)
         param_type = m.group(3)
         param_text = m.group(4)
@@ -214,7 +214,7 @@ def parse_exception(line):
     '''
     m = RAISES_REGEX.match(line)
     if m is None:
-        raise CartoucheError("Invalid cartouche exception syntax")
+        raise CartoucheSyntaxError('Cartouche: Invalid argument syntax "{line}" for Raises block'.format(line=line))
     return m.group(2), m.group(1)
 
 
@@ -421,7 +421,15 @@ def rewrite_autodoc(app, what, name, obj, options, lines):
 
         lines: The lines of the docstring.  Will be modified *in place*.
     '''
-    lines[:] = parse_cartouche_text(lines)
+    try:
+        lines[:] = parse_cartouche_text(lines)
+    except CartoucheSyntaxError as syntax_error:
+        args = syntax_error.args
+        arg0 = args[0] if args else ''
+        arg0 += " in docstring for {what} {name} :".format(what=what, name=name)
+        arg0 += "\n=== BEGIN DOCSTRING ===\n{lines}\n=== END DOCSTRING ===\n".format(lines='\n'.join(lines))
+        syntax_error.args = (arg0,) + args[1:]
+        raise
 
 
 def accept_bulleted_args():

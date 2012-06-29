@@ -2,7 +2,7 @@ import unittest
 
 from cartouche._portability import u
 
-from cartouche.parser import parse_cartouche_text
+from cartouche.parser import parse_cartouche_text, CartoucheSyntaxError
 from cartouche.errors import CartoucheError
 
 class CommentTests(unittest.TestCase):
@@ -586,7 +586,7 @@ All of the source sequence will be consumed.
         source_lines = source.splitlines()
         self.assertRaises(CartoucheError, lambda: parse_cartouche_text(source_lines))
 
-    def test_comment10(self):
+    def test_comment13(self):
         source = """
         Execute the command described by concatenating the string function arguments
         with the p4 -s global scripting flag and return the results in a dictionary.
@@ -647,3 +647,19 @@ All of the source sequence will be consumed.
                 self.assertTrue(len(result_line.strip()) == 0)
             else:
                 self.assertEqual(actual_line, result_line)
+
+    def test_comment14(self):
+        source = """Create a predicate which performs an identity comparison of its
+argument with a value.
+
+Args:
+    rhs: (right-hand-side) The value against which the identity test will
+    be performed.
+
+Returns:
+    A unary predicate function which determines whether its single
+    arguments (lhs) has the same identity - that is, is the same object -
+    as rhs.
+"""
+        source_lines = source.splitlines()
+        self.assertRaises(CartoucheSyntaxError, lambda: parse_cartouche_text(source_lines))
