@@ -12,7 +12,7 @@ from .nodes import (Node, Raises, Except, Note, Warning, Returns, Arg, Yields,
 
 OPTIONAL_BULLET_PATTERN = u(r'(?:[\*\+\-\•\‣\⁃]\s+)?')
 ARGS_PATTERN = u(r'(\*{0,2}\w+)(\s+\((\w+)\))?\s*:\s*(.*)')
-RAISES_PATTERN = u(r'(?:[\*\+\-]\s+)?([\w\.]+)\s*:\s*(.*)')
+RAISES_PATTERN = u(r'([\w\.]+)\s*:\s*(.*)')
 
 ARGS_REGEX = re.compile(ARGS_PATTERN)
 RAISES_REGEX = re.compile(RAISES_PATTERN)
@@ -428,6 +428,7 @@ def rewrite_autodoc(app, what, name, obj, options, lines):
         arg0 = args[0] if args else ''
         arg0 += " in docstring for {what} {name} :".format(what=what, name=name)
         arg0 += "\n=== BEGIN DOCSTRING ===\n{lines}\n=== END DOCSTRING ===\n".format(lines='\n'.join(lines))
+        #noinspection PyPropertyAccess
         syntax_error.args = (arg0,) + args[1:]
         raise
 
