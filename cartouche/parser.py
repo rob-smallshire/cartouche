@@ -420,6 +420,9 @@ def rewrite_autodoc(app, what, name, obj, options, lines):
             was given to the auto directive.
 
         lines: The lines of the docstring.  Will be modified *in place*.
+
+    Raises:
+        CartoucheSyntaxError: If the docstring is malformed.
     '''
     try:
         lines[:] = parse_cartouche_text(lines)
