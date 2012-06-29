@@ -1,11 +1,22 @@
+# -*- coding: utf-8 -*-
 from __future__ import print_function
+from contextlib import contextmanager
 
 import re
+from cartouche._portability import u
 
 from .errors import CartoucheError
 
 from .nodes import (Node, Raises, Except, Note, Warning, Returns, Arg, Yields,
                    ensure_terminal_blank)
+
+OPTIONAL_BULLET_PATTERN = u(r'(?:[\*\+\-\•\‣\⁃]\s+)?')
+ARGS_PATTERN = u(r'(\*{0,2}\w+)(\s+\((\w+)\))?\s*:\s*(.*)')
+RAISES_PATTERN = u(r'(?:[\*\+\-]\s+)?([\w\.]+)\s*:\s*(.*)')
+
+ARGS_REGEX = re.compile(ARGS_PATTERN)
+RAISES_REGEX = re.compile(RAISES_PATTERN)
+
 
 __author__ = 'Robert Smallshire'
 
@@ -121,13 +132,13 @@ def convert_children(node):
     return result
 
 
-ARG_REGEX = re.compile(r'(\*{0,2}\w+)(\s+\((\w+)\))?\s*:\s*(.*)')
+
 
 def append_child_to_args_group_node(child, group_node, indent):
     arg = None
     non_empty_lines = (line for line in child.lines if line)
     for line in non_empty_lines:
-        m = ARG_REGEX.match(line)
+        m = ARGS_REGEX.match(line)
         if m is None:
             raise CartoucheError("Invalid cartouche argument syntax")
         param_name = m.group(1)
@@ -192,8 +203,6 @@ def convert_raises(node):
     return group_node
 
 
-RAISE_REGEX = re.compile(r'([\w\.]+)\s*:\s*(.*)')
-
 def parse_exception(line):
     '''Parse the first line of a Cartouche exception description.
 
@@ -203,7 +212,7 @@ def parse_exception(line):
     Returns:
         A 2-tuple containing the exception type and the first line of the description.
     '''
-    m = RAISE_REGEX.match(line)
+    m = RAISES_REGEX.match(line)
     if m is None:
         raise CartoucheError("Invalid cartouche exception syntax")
     return m.group(2), m.group(1)
@@ -413,6 +422,60 @@ def rewrite_autodoc(app, what, name, obj, options, lines):
         lines: The lines of the docstring.  Will be modified *in place*.
     '''
     lines[:] = parse_cartouche_text(lines)
+
+
+def accept_bulleted_args():
+    '''Further use of the parser will accept bulleted lists for Args.'''
+    global ARGS_REGEX
+    ARGS_REGEX = re.compile(OPTIONAL_BULLET_PATTERN + ARGS_PATTERN)
+
+
+def reject_bulleted_args():
+    '''Further use of the parser will reject bulleted lists for Args.'''
+    global ARGS_REGEX
+    ARGS_REGEX = re.compile(ARGS_PATTERN)
+
+
+def accept_bulleted_raises():
+    '''Further use of the parser will accept bulleted lists for Raises.'''
+    global RAISES_REGEX
+    RAISES_REGEX = re.compile(OPTIONAL_BULLET_PATTERN + RAISES_PATTERN)
+
+
+def reject_bulleted_raises():
+    '''Further use of the parser will reject bulleted lists for Raises.'''
+    global RAISES_REGEX
+    RAISES_REGEX = re.compile(RAISES_PATTERN)
+
+
+@contextmanager
+def bulleted_args():
+    '''A context manager within the scope of which bulleted Args will be accepted.'''
+    global ARGS_REGEX
+    previous_args_regex = ARGS_REGEX
+    accept_bulleted_args()
+    yield
+    ARGS_REGEX = previous_args_regex
+
+
+@contextmanager
+def bulleted_raises():
+    '''A context manager within the scope of which bulleted Raises will be accepted.'''
+    global RAISES_REGEX
+    previous_raises_regex = RAISES_REGEX
+    accept_bulleted_raises()
+    yield
+    RAISES_REGEX = previous_raises_regex
+
+
+def builder_inited(app):
+    if app.config.cartouche_accept_bulleted_args:
+        accept_bulleted_args()
+
+    if app.config.cartouche_accept_bulleted_raises:
+        accept_bulleted_raises()
+
+
 
 
 
