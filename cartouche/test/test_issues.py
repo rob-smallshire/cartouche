@@ -1,6 +1,8 @@
 import unittest
 
-from cartouche.parser import (parse_cartouche_text, bulleted_raises, bulleted_args)
+
+from cartouche._portability import u
+from cartouche.parser import (parse_cartouche_text, bulleted_raises, bulleted_args, CartoucheSyntaxError)
 
 class IssueTests(unittest.TestCase):
 
@@ -78,3 +80,21 @@ A docstring.
                 self.assertTrue(len(result_line.strip()) == 0)
             else:
                 self.assertEqual(actual_line, result_line)
+
+
+    def test_issue3(self):
+        lines = [u('Parse a single line of a tree to determine depth and node.'),
+                 u(''),
+                 u('Args:'),
+                 u('    A single line string from a SCons dependency tree.'),
+                 u('    '),
+                 u('Returns:'),
+                 u('    A 2-tuple containing the tree 0 based tree depth as the first'),
+                 u('    element and the node description as the second element.'),
+                 u(''),
+                 u('Raises:'),
+                 u('    ValueError: If line does not have the expected form.'),
+                 u('')]
+        self.assertRaises(CartoucheSyntaxError, lambda: parse_cartouche_text(lines))
+
+
