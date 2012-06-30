@@ -97,4 +97,38 @@ A docstring.
                  u('')]
         self.assertRaises(CartoucheSyntaxError, lambda: parse_cartouche_text(lines))
 
+    def test_issue4(self):
+        source = '''
+    Execute the command described by concatenating the string function arguments
+    with the p4 -s global scripting flag and return the results in a dictionary.
+
+    For example, to run the command::
+
+      p4 -s fstat -T depotFile foo.h
+
+    call::
+
+      p4('fstat', '-T', 'depotFile', 'foo.h')
+
+    Args:
+        args: The arguments to the p4 command as a list of objects which will
+            be converted to strings.
+
+    Returns:
+        A dictionary of lists where each key in the dictionary is the field name
+        from the command output, and each value is a list of output lines in
+        order.
+
+    Raises:
+        PerforceError: If the command could not be run or if the command
+            reported an error.
+    '''
+
+        source_lines = source.splitlines()
+
+        try:
+            parse_cartouche_text(source_lines)
+        except UnboundLocalError:
+            self.fail("parse_cartouche_text raised UnboundLocalError")
+
 
