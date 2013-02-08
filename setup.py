@@ -2,7 +2,7 @@
 
 from setuptools import setup
 
-from cartouche import __version__ as version
+version = '0.9'
 
 with open('README.txt', 'r') as readme:
     long_description = readme.read()
