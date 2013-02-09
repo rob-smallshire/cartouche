@@ -131,4 +131,21 @@ A docstring.
         except UnboundLocalError:
             self.fail("parse_cartouche_text raised UnboundLocalError")
 
+    def test_issue8(self):
+        source = '''
+A docstring.
 
+Args:
+  arg1 (some.type): Some argument
+'''
+
+        expected = '''
+A docstring.
+
+:param arg1: Some argument
+:type arg1: some.type
+'''
+        source_lines = source.splitlines()
+        actual_lines = parse_cartouche_text(source_lines)
+        actual = "\n".join(actual_lines)
+        self.assertEqual(expected, actual)

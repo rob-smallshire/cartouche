@@ -11,7 +11,7 @@ from .nodes import (Node, Raises, Except, Note, Warning, Returns, Arg, Yields,
                    ensure_terminal_blank)
 
 OPTIONAL_BULLET_PATTERN = u(r'(?:[\*\+\-\•\‣\⁃]\s+)?')
-ARGS_PATTERN = u(r'(\*{0,2}\w+)(\s+\((\w+)\))?\s*:\s*(.*)')
+ARGS_PATTERN = u(r'(\*{0,2}\w+)(\s+\(([\.\w]+)\))?\s*:\s*(.*)')
 RAISES_PATTERN = u(r'([\w\.]+)\s*:\s*(.*)')
 
 ARGS_REGEX = re.compile(ARGS_PATTERN)
