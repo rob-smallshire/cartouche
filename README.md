@@ -43,9 +43,10 @@ Cartouche will turn this:
 
 into this,
 
-http://wiki.cartouche.googlecode.com/hg/images/sample_html.png
+![Image of cartouche rendered HTML](http://wiki.cartouche.googlecode.com/hg/images/sample_html.png)
 
-=How to get it=
+How to get it
+-------------
 
 Use ``easy_install`` or ``pip`` to fetch it from the Python Package Index
 
