@@ -80,3 +80,5 @@ extensions = ['sphinx.ext.autodoc', 'cartouche']
 ````
 
 then start writing docstrings in the form above.
+
+Full documentation can be found here: http://cartouche.readthedocs.org/en/latest/
