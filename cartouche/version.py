@@ -1,3 +1,3 @@
-'''Specification of the hieroglyph version'''
+'''Specification of the cartouche version'''
 
-__version__ = '0.9'
+__version__ = '1.0'

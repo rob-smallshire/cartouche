@@ -6,17 +6,25 @@ A Sphinx extension to convert help() friendly docstrings to Sphinx markup.
 Welcome to `cartouche`
 ----------------------
 
-`cartouche` allows you to write human readable doc-strings for use with `help()` which can also produce beautiful Sphinx output.
+`cartouche` allows you to write human readable doc-strings for use with
+`help()` which can also produce beautiful Sphinx output.
 
 Why it's needed
 ---------------
 
-Sphinx is a popular tool for documenting Python APIs which uses reStructuredText as a its lightweight markup language. Sphinx extends restructured text with semantic markup elements for documenting Python APIs but when these are used the ratio of markup to content becomes too high and readability is compromised enough that the docstring becomes unsuitable for use with standard Python introspection mechanisms like help() or IDEs.
+Sphinx is a popular tool for documenting Python APIs which uses
+reStructuredText as a its lightweight markup language. Sphinx extends
+restructured text with semantic markup elements for documenting Python APIs
+but when these are used the ratio of markup to content becomes too high and
+readability is compromised enough that the docstring becomes unsuitable for
+use with standard Python introspection mechanisms like help() or IDEs.
 
 What it does
 ------------
 
-Cartouche is a Sphinx extension which automatically converts a highly readable docstring format suitable for use with help() and IDEs to the reStructuredText hieroglyphics required by Sphinx.
+Cartouche is a Sphinx extension which automatically converts a highly readable
+docstring format suitable for use with help() and IDEs to the reStructuredText
+hieroglyphics required by Sphinx.
 
 Cartouche will turn this:
 
@@ -78,7 +86,8 @@ Alternatively, download the source distribution, unzip it and run ``setup.py``:
 How to use it
 -------------
 
-Refer to the `cartouche` Sphinx extension in the `conf.py` file for your Sphinx documentation source like this:
+Refer to the `cartouche` Sphinx extension in the `conf.py` file for your
+Sphinx documentation source like this:
 
 ```
 # Add any Sphinx extension module names here, as strings. They can be extensions

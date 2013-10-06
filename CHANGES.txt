@@ -1,5 +1,14 @@
+Version 1.0
+-----------
+
+* Fix for issue #13: bail out of setup function if called by nose
+* Fix for issue #10: chicken/egg issue on importing version number in setup...
+* Fix for Issue #8, dots in type specifier
+* Moved project to GitHub
+
 Version 0.9
 -----------
-* Changed the project name from Cartouche from Hieroglyph to avoid a naming clash.
+* Changed the project name from Cartouche from Hieroglyph to avoid a naming
+  clash.
 * Ensured Python 3 compatibility
 * Added support for Yields blocks.

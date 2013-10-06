@@ -2,7 +2,7 @@
 
 from setuptools import setup
 
-version = '0.9'
+version = '1.0'
 
 with open('README.txt', 'r') as readme:
     long_description = readme.read()
@@ -14,7 +14,7 @@ setup(
     packages=['cartouche'],
     version = "{version}".format(version=version),
     url='http://code.google.com/p/cartouche/',
-    download_url="http://code.google.com/p/cartouche/downloads/detail?name=cartouche-{version}.zip".format(version=version),
+    download_url="https://pypi.python.org/pypi/cartouche",
     license='BSD',
     author='Robert Smallshire',
     author_email='robert@smallshire.org.uk',
@@ -30,7 +30,7 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3"
+        "Programming Language :: Python :: 3",
         'Topic :: Documentation',
         'Topic :: Utilities',
     ],
