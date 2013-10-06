@@ -149,3 +149,13 @@ A docstring.
         actual_lines = parse_cartouche_text(source_lines)
         actual = "\n".join(actual_lines)
         self.assertEqual(expected, actual)
+
+    def test_issue11(self):
+        source = """
+Raises:
+Exception: This is a multi-line
+bug.
+"""
+        source_lines = source.splitlines()
+        parse_cartouche_text(source_lines)
+        # We're just testing that this doesn't fail.
