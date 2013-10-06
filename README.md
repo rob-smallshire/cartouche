@@ -21,24 +21,32 @@ Cartouche is a Sphinx extension which automatically converts a highly readable d
 Cartouche will turn this:
 
 ```
-        Determine if all elements in the source sequence satisfy a condition.
+def select(self, selector):
+    '''Transforms each element of a sequence into a new form.
 
-        All of the source sequence will be consumed.
+    Each element of the source is transformed through a selector function
+    to produce a corresponding element in teh result sequence.
 
-        Note: This method uses immediate execution.
+    If the selector is identity the method will return self.
 
-        Args:
-            predicate (callable) : An optional single argument function used to test each
-                elements. If omitted, the bool() function is used resulting in
-                the elements being tested directly.
+    Note: This method uses deferred execution.
 
-        Returns:
-            True if all elements in the sequence meet the predicate condition,
-            otherwise False.
+    Args:
+        selector: A unary function mapping a value in the source sequence
+            to the corresponding value in the generated generated sequence.
+            The single positional argument to the selector function is the
+            element value.  The return value of the selector function
+            should be the corresponding element of the result sequence.
 
-        Raises:
-            ValueError: If the Queryable is closed()
-            TypeError: If predicate is not callable.
+    Returns:
+        A Queryable over generated sequence whose elements are the result
+        of invoking the selector function on each element of the source
+        sequence.
+
+    Raises:
+        ValueError: If this Queryable has been closed.
+        TypeError: If selector is not callable.
+    '''
 ```
 
 into this,
