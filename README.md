@@ -43,7 +43,7 @@ Cartouche will turn this:
 
 into this,
 
-![Image of cartouche rendered HTML](http://wiki.cartouche.googlecode.com/hg/images/sample_html.png)
+![Image of cartouche rendered HTML](http://cartouche.readthedocs.org/en/latest/_images/select_html.png)
 
 How to get it
 -------------
