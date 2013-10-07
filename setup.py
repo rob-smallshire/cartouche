@@ -13,7 +13,7 @@ setup(
     name='cartouche',
     packages=['cartouche'],
     version = "{version}".format(version=version),
-    url='http://code.google.com/p/cartouche/',
+    url='https://github.com/rob-smallshire/cartouche',
     download_url="https://pypi.python.org/pypi/cartouche",
     license='BSD',
     author='Robert Smallshire',
