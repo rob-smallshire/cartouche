@@ -15,6 +15,7 @@ native reStructuredText Sphinx format is that it retains its readability when
 used with the ``help()`` function in the Python REPL, or when presented by
 IDEs.
 
+
 Functions and Methods
 =====================
 
@@ -261,7 +262,53 @@ or::
           same line as the heading which introduced the type error. Subsequent
           lines must be indented.
 
+Usage
+-----
 
+The ``Usage:`` heading is used to provide a code sample.  The entire content
+of the block, as determined by indentation, is interpreted as Python code and
+formatting accordingly::
+
+  Usage:
+
+      for i in range(100):
+          print(i)
+
+Classes and Attributes
+======================
+
+Class docstrings support an ``Attributes:`` block where instance attributes
+of objects of that class may be listed.
+
+The attributes block is simular to the ``Args:`` block.  List each attribute
+by name separated from its description by a colon.  You can optionally
+include the attribute type in parentheses between the name and the colon.
+
+Here's an example class docstring::
+
+  class Example
+    """The example docstring for the Example class.
+
+    Within this class docstring we can both describe the class, but also use
+    an attributes heading to list the attributes we expect the instances of
+    the class to have.  There is no specific provision for distinguishing
+    between class attributes and instance attributes at this point, so you
+    should make that distinction clear in your descriptions.
+
+    Attributes:
+        fred: This attribute description just runs to a single line.
+        shiela: This attribute description is somewhat longer and spans
+             multiple lines. Subsequent lines are indented one further level.
+        jim (int): As with function or method docstrings you can optionally
+            provide a type in parentheses after the attribute name and before
+            the colon which separates the name from the description.
+
+        harry: With longer attribute descriptions it can help to separate the
+            attributes with blank lines.  This takes up more room in the
+            source code but is much easier to read when using the help()
+            function.
+    """
+    pass
 
 .. _Google Python Style Guide: http://google-styleguide.googlecode.com/svn/trunk/pyguide.html#Comments
 

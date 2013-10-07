@@ -8,7 +8,7 @@ from cartouche._portability import u
 from .errors import CartoucheError
 
 from .nodes import (Node, Raises, Except, Note, Warning, Returns, Arg, Yields,
-                    Attribute, ensure_terminal_blank)
+                    Attribute, Usage, ensure_terminal_blank)
 
 OPTIONAL_BULLET_PATTERN = u(r'(?:[\*\+\-\•\‣\⁃]\s+)?')
 ARGS_PATTERN = u(r'(\*{0,2}\w+)(\s+\(([\.\w]+)\))?\s*:\s*(.*)')
@@ -123,6 +123,8 @@ def convert_node(node):
         return convert_warning(node)
     if node.lines[0].startswith('Attributes:'):
         return convert_attributes(node)
+    if node.lines[0].startswith('Usage:'):
+        return convert_usage(node)
     result = convert_children(node)
     result.lines = node.lines
     result.indent = node.indent
@@ -197,12 +199,14 @@ def convert_returns(node):
     returns.children = node.children
     return returns
 
+
 def convert_yields(node):
     assert node.lines[0].startswith('Yields:')
     returns = Yields(node.indent)
     returns.line = node.lines[0][8:].strip()
     returns.children = node.children
     return returns
+
 
 def convert_note(node):
     assert node.lines[0].startswith('Note:')
@@ -234,6 +238,13 @@ def convert_attributes(node):
     for child in node.children:
         append_child_to_attributes_group_node(child, group_node, node.indent)
     return group_node
+
+
+def convert_usage(node):
+    assert node.lines[0].startswith('Usage:')
+    usage = Usage(node.indent)
+    usage.children = node.children
+    return usage
 
 
 def parse_exception(line):

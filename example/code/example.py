@@ -65,6 +65,11 @@ class Example(object):
                 like the first two.
 
             IndexError: Or separated by whitespace if that aids readability.
+
+        Usage:
+             for i in range(100):
+                 x = do_something(tom=i, dick=i+1, harry=i-1, george=i/2)
+                 print(x)
         """
         pass
 

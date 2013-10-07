@@ -720,3 +720,63 @@ Returns:
         source_lines = source.splitlines()
         actual_lines = parse_cartouche_text(source_lines)
         pass
+
+    def test_comment17(self):
+        source = """A test comment including a Usage block.
+
+        In this example we test that including a code sample within a usage
+        block works just fine.
+
+        Usage:
+
+          foos = [bar for bar in animals if bar is sheep]
+          print(foos)
+        """
+        source_lines = source.splitlines()
+        actual_lines = parse_cartouche_text(source_lines)
+        pass
+
+    def test_comment18(self):
+        source = """A test comment including a Usage block.
+
+        In this example we test that including a code sample within a usage
+        block works just fine. We you a substantial block of code with lots
+        of interesting indentation to ensure everything is working fine.
+
+        Usage:
+
+            result = []
+            indent = ' ' * self.indent
+
+            # Render the param description
+            description = []
+            for child in self.children:
+                child_lines = child.render_rst()
+                description.extend(child_lines)
+
+            name = self.name.replace('*', r'\*')
+
+            first_description = description[0].lstrip() if len(description) else ''
+            if not first_description:
+                # TODO: Emit a warning about a missing argument description
+                pass
+
+            result.append("{indent}:param {name}: {first_description}".format(
+                            indent=indent, name=name,
+                            first_description=first_description))
+
+            result.extend(description[1:])
+
+            # If a type was specified render the type
+            if self.type is not None:
+                result.append("{indent}:type {name}: {type}".format(indent=indent,
+                                                 name=self.name, type=self.type))
+                result.append('')
+
+            ensure_terminal_blank(result)
+
+            return result
+        """
+        source_lines = source.splitlines()
+        actual_lines = parse_cartouche_text(source_lines)
+        pass

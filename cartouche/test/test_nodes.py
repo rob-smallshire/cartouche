@@ -1,5 +1,6 @@
 import unittest
-from cartouche.nodes import Node, Arg, Raises, Except, Returns, Warning, Note, Yields, Attribute
+from cartouche.nodes import (Node, Arg, Raises, Except, Returns, Warning,
+                             Note, Yields, Attribute, Usage)
 
 __author__ = 'Robert Smallshire'
 
@@ -643,4 +644,69 @@ class AttributeTests(unittest.TestCase):
                                '',
                                '   (str) Description1',
                                '   Description2',
+                               ''])
+
+class UsageTests(unittest.TestCase):
+
+    def test_create(self):
+        node = Usage(5)
+        self.assertEqual(node.indent, 5)
+        self.assertEqual(node.lines, [])
+        self.assertIsNone(node.parent)
+
+
+    def test_add_one_child(self):
+        node = Usage(5)
+        child = Node(parent=node)
+        node.add_child(child)
+        self.assertIs(node.children[0], child)
+
+    def test_add_two_children(self):
+        node = Usage(5)
+        child0 = Node(parent=node)
+        child1 = Node(parent=node)
+        node.add_child(child0)
+        node.add_child(child1)
+        self.assertIs(node.children[0], child0)
+        self.assertIs(node.children[1], child1)
+
+    def test_repr(self):
+        node = Usage(5)
+        actual = repr(node)
+        expected = "Usage(5)"
+        self.assertEqual(expected, actual)
+
+    def test_render_rst_empty(self):
+        node = Usage(5)
+        rst = node.render_rst()
+        self.assertEqual(rst, [])
+
+    def test_render_rst_with_code(self):
+        node = Usage(7)
+        child_a = Node(indent=10, lines=['print("Hello, World!")'], parent=node)
+        node.add_child(child_a)
+        child_b = Node(indent=10, lines=['print("Reticulating splines!")'], parent=node)
+        node.add_child(child_b)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['       .. rubric:: Usage:',
+                               '',
+                               '       .. code-block:: python',
+                               '',
+                               '          print("Hello, World!")',
+                               '          print("Reticulating splines!")',
+                               ''])
+
+    def test_render_rst_with_indented_code(self):
+        node = Usage(5)
+        child_a = Node(indent=10, lines=['for i in range(100):'], parent=node)
+        node.add_child(child_a)
+        child_b = Node(indent=14, lines=['print(i)'], parent=node)
+        node.add_child(child_b)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['     .. rubric:: Usage:',
+                               '',
+                               '     .. code-block:: python',
+                               '',
+                               '        for i in range(100):',
+                               '            print(i)',
                                ''])

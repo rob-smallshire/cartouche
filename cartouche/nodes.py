@@ -1,5 +1,5 @@
 __author__ = 'Robert Smallshire'
-
+import sys
 
 class Node(object):
 
@@ -45,8 +45,7 @@ class Arg(Node):
         self.type = None
 
     def __repr__(self):
-        return "Arg(" + repr(self.name) + ", " + repr(self.type)\
-                      + ",children=" + repr(self.children) + ")"
+        return "Arg(" + repr(self.name) + ", " + repr(self.type) + ", children=" + repr(self.children) + ")"
 
     def render_rst(self, *args, **kwargs):
         result = []
@@ -62,8 +61,7 @@ class Arg(Node):
 
         first_description = description[0].lstrip() if len(description) else ''
         if not first_description:
-            # TODO: Emit a warning about a missing argument description
-            pass
+            print("Missing argument description for {name}".format(name=self.name), file=sys.stderr)
 
         result.append("{indent}:param {name}: {first_description}".format(
                         indent=indent, name=name,
@@ -310,6 +308,41 @@ class Note(Node):
         ensure_terminal_blank(result)
         return result
 
+class Usage(Node):
+
+    def __init__(self, indent):
+        super(Usage, self).__init__(indent=indent)
+        self.line = ''  # TODO: Can't we use self.lines in the superclass for this?
+        self.lang = 'python'
+
+    def __repr__(self):
+        return "Usage(" + repr(self.indent) + ")"
+
+    def render_rst(self, *args, **kwargs):
+        result = []
+        indent = ' ' * self.indent
+
+        # Render the param description
+        description = []
+        for child in self.children:
+            child_lines = child.render_rst()
+            description.extend(child_lines)
+
+        if len(description) > 0:
+            minimum_code_indent = min(len(codeline) - len(codeline.lstrip()) for codeline in description if not codeline.isspace())
+            codelines = [codeline[minimum_code_indent:] for codeline in description]
+
+            result.append(indent + ".. rubric:: Usage:")
+            result.append('')
+            result.append(indent + '.. code-block:: {lang}'.format(lang=self.lang))
+            result.append('')
+            for codeline in codelines:
+                result.append(indent + '   ' + codeline)
+        else:
+            print("No code in Usage block. Skipping!", file=sys.stderr)
+
+        ensure_terminal_blank(result)
+        return result
 
 def ensure_terminal_blank(result):
     '''If the description didn't end with a blank line add one here.'''
