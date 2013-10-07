@@ -21,10 +21,5 @@ Yes. Unfortunately, somebody too lazy to do a quick Google search for "Sphinx
 extension hieroglyph" beat me to an upload to the Python Package Index,
 thereby securing the name for their own project. C'est la vie. Que sera sera.
 
-Are attribute lists in class docstrings supported?
---------------------------------------------------
-
-Not yet, although any information you place in class docstrings will pass
-through ``cartouche`` unaltered.
 
 .. [*] See the `Wikipedia article on cartouches <http://en.wikipedia.org/wiki/Cartouche>`_ for more details.

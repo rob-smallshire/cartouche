@@ -1,5 +1,6 @@
 __author__ = 'Robert Smallshire'
 
+
 class Node(object):
 
     def __init__(self, indent=None, lines=None, parent=None):
@@ -23,10 +24,8 @@ class Node(object):
         assert(child.parent is self)
         self.children.append(child)
 
-
     def __repr__(self):
         return "Node(" + repr(self.indent) + ", " + repr(self.lines) + ", children=" + repr(self.children) + ")"
-
 
     def render_rst(self, *args, **kwargs):
         result = []
@@ -37,7 +36,6 @@ class Node(object):
         return result
 
 
-
 class Arg(Node):
 
     def __init__(self, indent, name):
@@ -45,10 +43,8 @@ class Arg(Node):
         self.name = name
         self.type = None
 
-
     def __repr__(self):
         return "Arg(" + repr(self.name) + ", " + repr(self.type) + ", children=" + repr(self.children) + ")"
-
 
     def render_rst(self, *args, **kwargs):
         result = []
@@ -81,7 +77,47 @@ class Arg(Node):
 
         return result
 
+class Attribute(Node):
 
+    def __init__(self, indent, name):
+        super(Attribute, self).__init__(indent)
+        self.name = name
+        self.type = None
+
+
+    def __repr__(self):
+        return "Attribute(" + repr(self.name) + ", " + repr(self.type) + ", children=" + repr(self.children) + ")"
+
+
+    def render_rst(self, *args, **kwargs):
+        result = []
+        indent = ' ' * self.indent
+
+        # Render the attribute description
+        description = []
+        for child in self.children:
+            child_lines = child.render_rst()
+            description.extend(child_lines)
+
+        if self.type is not None:
+            if len(description) > 0:
+                description[0] = "({t}) {desc}".format(t=self.type, desc=description[0].lstrip())
+            else:
+                description = ["({t})".format(t=self.type)]
+
+        # The description lines should be indented by three characters to line
+        # up with the directive.
+        reindented_description = ["   " + line.lstrip() for line in description]
+
+        result.append(".. py:attribute:: {name}".format(name=self.name))
+
+        if len(reindented_description) > 0:
+            result.append('')
+            result.extend(reindented_description)
+
+        ensure_terminal_blank(result)
+
+        return result
 
 class Raises(Node):
 

@@ -663,3 +663,60 @@ Returns:
 """
         source_lines = source.splitlines()
         self.assertRaises(CartoucheSyntaxError, lambda: parse_cartouche_text(source_lines))
+
+    def test_comment15(self):
+        source = """A well.
+
+        A well represents a borehole which is drilled in order to discover or
+        delimit a petroleum deposit and/ or to produce petroleum or water for
+        injection purposes, to inject gas, water or other medium, or to map or
+        monitor well parameters. A well may have one or several termination points.
+        (source: Norwegian Petroleum Directorate)
+
+        domain.rox respects this definition in the model. The Well
+        owns its child WellTracks, which in turn own their child Surveys
+        and LogRuns.
+
+        Attributes:
+            name: The name of the Well, as a string. For each Project, each Well
+                must be uniquely named.
+            project: The Project that owns the Well.
+            rkb_elevation (double): The Rotary Kelly Bushing elevation for
+                the well.
+            well_track: The well track.
+            wellhead: The coordinate location of the wellhead, as a 3-tuple.
+                Individual elements of this tuple can be extracted as
+                `well.wellhead.x`, `well.wellhead.y`, and `well.wellhead.z`.
+        """
+        source_lines = source.splitlines()
+        actual_lines = parse_cartouche_text(source_lines)
+        pass
+
+    def test_comment16(self):
+        source = """The example docstring for the Example class.
+
+        Within this class docstring we can both describe the class, but also
+        use an attributes heading to list the attributes we expect the
+        instances of the class to have.  There is no specific provision for
+        distinguishing between class attributes and instance attributes at
+        this point, so you should make that distinction clear in your
+        descriptions.
+
+        Attributes:
+            fred: This attribute description just runs to a single line.
+            shiela: This attribute description is somewhat longer and spans
+                 multiple lines. Subsequent lines are indented one further
+                 level.
+            jim (int): As with function or method docstrings you can
+                optionally provide a type in parentheses after the attribute
+                name and before the colon which separates the name from the
+                description.
+
+            harry: With longer attribute descriptions it can help to separate
+                the attributes with blank lines.  This takes up more room in
+                the source code but is much easier to read when using the
+                help() function.
+        """
+        source_lines = source.splitlines()
+        actual_lines = parse_cartouche_text(source_lines)
+        pass

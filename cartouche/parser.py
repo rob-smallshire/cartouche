@@ -8,13 +8,15 @@ from cartouche._portability import u
 from .errors import CartoucheError
 
 from .nodes import (Node, Raises, Except, Note, Warning, Returns, Arg, Yields,
-                   ensure_terminal_blank)
+                    Attribute, ensure_terminal_blank)
 
 OPTIONAL_BULLET_PATTERN = u(r'(?:[\*\+\-\•\‣\⁃]\s+)?')
 ARGS_PATTERN = u(r'(\*{0,2}\w+)(\s+\(([\.\w]+)\))?\s*:\s*(.*)')
+ATTRIBUTES_PATTERN = u(r'(\*{0,2}\w+)(\s+\(([\.\w]+)\))?\s*:\s*(.*)')
 RAISES_PATTERN = u(r'([\w\.]+)\s*:\s*(.*)')
 
 ARGS_REGEX = re.compile(ARGS_PATTERN)
+ATTRIBUTES_REGEX = re.compile(ATTRIBUTES_PATTERN)
 RAISES_REGEX = re.compile(RAISES_PATTERN)
 
 class CartoucheSyntaxError(CartoucheError):
@@ -119,6 +121,8 @@ def convert_node(node):
         return convert_note(node)
     if node.lines[0].startswith('Warning:'):
         return convert_warning(node)
+    if node.lines[0].startswith('Attributes:'):
+        return convert_attributes(node)
     result = convert_children(node)
     result.lines = node.lines
     result.indent = node.indent
@@ -130,8 +134,6 @@ def convert_children(node):
     result = Node()
     result.children = converted_children
     return result
-
-
 
 
 def append_child_to_args_group_node(child, group_node, indent):
@@ -153,6 +155,29 @@ def append_child_to_args_group_node(child, group_node, indent):
             arg.children.append(Node(indent, [param_text], arg))
     if arg is not None:
         last_child = arg.children[-1] if len(arg.children) != 0 else arg
+        for grandchild in child.children:
+            last_child.children.append(grandchild)
+
+
+def append_child_to_attributes_group_node(child, group_node, indent):
+    attribute = None
+    non_empty_lines = (line for line in child.lines if line)
+    for line in non_empty_lines:
+        m = ATTRIBUTES_REGEX.match(line)
+        if m is None:
+            raise CartoucheSyntaxError('Cartouche: Invalid attribute syntax "{line}" for Attributes block'.format(line=line))
+        attribute_name = m.group(1)
+        attribute_type = m.group(3)
+        attribute_text = m.group(4)
+
+        attribute = Attribute(indent, attribute_name)
+        group_node.children.append(attribute)
+        attribute.type = attribute_type
+
+        if attribute_text is not None:
+            attribute.children.append(Node(indent, [attribute_text], attribute))
+    if attribute is not None:
+        last_child = attribute.children[-1] if len(attribute.children) != 0 else attribute
         for grandchild in child.children:
             last_child.children.append(grandchild)
 
@@ -200,6 +225,14 @@ def convert_raises(node):
     group_node = Raises(node.indent)
     for child in node.children:
         append_child_to_raise_node(child, group_node)
+    return group_node
+
+
+def convert_attributes(node):
+    assert node.lines[0].startswith('Attributes:')
+    group_node = Node()
+    for child in node.children:
+        append_child_to_attributes_group_node(child, group_node, node.indent)
     return group_node
 
 

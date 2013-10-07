@@ -1,5 +1,5 @@
 import unittest
-from cartouche.nodes import Node, Arg, Raises, Except, Returns, Warning, Note, Yields
+from cartouche.nodes import Node, Arg, Raises, Except, Returns, Warning, Note, Yields, Attribute
 
 __author__ = 'Robert Smallshire'
 
@@ -549,3 +549,98 @@ class NoteTests(unittest.TestCase):
                                '            ChildB',
                                ''])
 
+class AttributeTests(unittest.TestCase):
+
+    def test_create(self):
+        node = Attribute(5, 'foo')
+        self.assertEqual(node.indent, 5)
+        self.assertEqual(node.name, 'foo')
+        self.assertEqual(node.lines, [])
+        self.assertIsNone(node.parent)
+
+    def test_set_type(self):
+        node = Attribute(5, 'foo')
+        node.type = 'str'
+        self.assertEqual(node.type, 'str')
+
+    def test_add_one_child(self):
+        node = Attribute(5, 'foo')
+        child = Node(parent=node)
+        node.add_child(child)
+        self.assertIs(node.children[0], child)
+
+    def test_add_two_children(self):
+        node = Attribute(5, 'foo')
+        child0 = Node(parent=node)
+        child1 = Node(parent=node)
+        node.add_child(child0)
+        node.add_child(child1)
+        self.assertIs(node.children[0], child0)
+        self.assertIs(node.children[1], child1)
+
+    def test_repr(self):
+        node = Attribute(5, 'foo')
+        actual = repr(node)
+        expected = "Attribute('foo', None, children=[])"
+        self.assertEqual(expected, actual)
+
+    def test_render_rst_empty(self):
+        node = Attribute(5, 'bar')
+        rst = node.render_rst()
+        self.assertEqual(rst, ['.. py:attribute:: bar',
+                               ''])
+
+    def test_render_rst_with_child(self):
+        node = Attribute(5, 'bar')
+        child = Node(indent=10, lines=["Description"], parent=node)
+        node.add_child(child)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['.. py:attribute:: bar',
+                               '',
+                               '   Description',
+                               ''])
+
+    def test_render_rst_with_children(self):
+        node = Attribute(5, 'bar')
+        child_a = Node(indent=10, lines=["ChildA"], parent=node)
+        node.add_child(child_a)
+        child_b = Node(indent=10, lines=["ChildB"], parent=node)
+        node.add_child(child_b)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['.. py:attribute:: bar',
+                               '',
+                               '   ChildA',
+                               '   ChildB',
+                               ''])
+
+    def test_render_rst_with_type(self):
+        node = Attribute(5, 'bar')
+        node.type = 'str'
+        rst = node.render_rst()
+        self.assertEqual(rst, ['.. py:attribute:: bar',
+                               '',
+                               '   (str)',
+                               ''])
+
+    def test_render_rst_with_type_and_description(self):
+        node = Attribute(5, 'bar')
+        node.type = 'str'
+        child = Node(indent=10, lines=["Description"], parent=node)
+        node.add_child(child)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['.. py:attribute:: bar',
+                               '',
+                               '   (str) Description',
+                               ''])
+
+    def test_render_rst_with_type_and_multi_line_description(self):
+        node = Attribute(5, 'bar')
+        node.type = 'str'
+        child = Node(indent=10, lines=["Description1", "Description2"], parent=node)
+        node.add_child(child)
+        rst = node.render_rst()
+        self.assertEqual(rst, ['.. py:attribute:: bar',
+                               '',
+                               '   (str) Description1',
+                               '   Description2',
+                               ''])
