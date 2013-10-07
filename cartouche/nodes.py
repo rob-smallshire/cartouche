@@ -25,7 +25,8 @@ class Node(object):
         self.children.append(child)
 
     def __repr__(self):
-        return "Node(" + repr(self.indent) + ", " + repr(self.lines) + ", children=" + repr(self.children) + ")"
+        return "Node(" + repr(self.indent) + ", " + repr(self.lines)\
+                       + ", children=" + repr(self.children) + ")"
 
     def render_rst(self, *args, **kwargs):
         result = []
@@ -44,7 +45,8 @@ class Arg(Node):
         self.type = None
 
     def __repr__(self):
-        return "Arg(" + repr(self.name) + ", " + repr(self.type) + ", children=" + repr(self.children) + ")"
+        return "Arg(" + repr(self.name) + ", " + repr(self.type)\
+                      + ",children=" + repr(self.children) + ")"
 
     def render_rst(self, *args, **kwargs):
         result = []
@@ -63,14 +65,16 @@ class Arg(Node):
             # TODO: Emit a warning about a missing argument description
             pass
 
-        result.append("{indent}:param {name}: {first_description}".format(indent=indent, name=name,
+        result.append("{indent}:param {name}: {first_description}".format(
+                        indent=indent, name=name,
                         first_description=first_description))
 
         result.extend(description[1:])
 
         # If a type was specified render the type
         if self.type is not None:
-            result.append("{indent}:type {name}: {type}".format(indent=indent, name=self.name, type=self.type))
+            result.append("{indent}:type {name}: {type}".format(indent=indent,
+                                             name=self.name, type=self.type))
             result.append('')
 
         ensure_terminal_blank(result)
@@ -86,7 +90,8 @@ class Attribute(Node):
 
 
     def __repr__(self):
-        return "Attribute(" + repr(self.name) + ", " + repr(self.type) + ", children=" + repr(self.children) + ")"
+        return "Attribute(" + repr(self.name) + ", " + repr(self.type)\
+                            + ", children=" + repr(self.children) + ")"
 
 
     def render_rst(self, *args, **kwargs):
@@ -101,7 +106,8 @@ class Attribute(Node):
 
         if self.type is not None:
             if len(description) > 0:
-                description[0] = "({t}) {desc}".format(t=self.type, desc=description[0].lstrip())
+                description[0] = "({t}) {desc}".format(
+                    t=self.type, desc=description[0].lstrip())
             else:
                 description = ["({t})".format(t=self.type)]
 
@@ -147,10 +153,9 @@ class Except(Node):
         #self.child_indent = child_indent
         self.type = type
 
-
     def __repr__(self):
-        return "Except(" + repr(self.type) + ", children=" + repr(self.children) + ")"
-
+        return "Except(" + repr(self.type) + ", children="\
+                         + repr(self.children) + ")"
 
     def render_rst(self, only_child=False, *args, **kwargs):
         result = []
@@ -168,7 +173,8 @@ class Except(Node):
         if not first_description:
             # TODO: Emit a warning about a missing argument description
             pass
-        result.append("{indent}{bullet}{type} - {first_description}".format(indent=indent,
+        result.append("{indent}{bullet}{type} - {first_description}".format(
+                        indent=indent,
                         bullet=bullet, type=self.type,
                         first_description=first_description))
 
@@ -178,7 +184,6 @@ class Except(Node):
         return result
 
 
-
 class Returns(Node):
 
     def __init__(self, indent):
@@ -186,10 +191,8 @@ class Returns(Node):
         self.title = 'Returns'
         self.line = ''
 
-
     def __repr__(self):
         return "Returns(" + str(self.indent) + ", children=" + str(self.children) + ")"
-
 
     def render_rst(self, *args, **kwargs):
         result = []
@@ -208,13 +211,11 @@ class Returns(Node):
         ensure_terminal_blank(result)
         return result
 
-
     def render_title(self, description, indent, result):
         first_description = description[0].lstrip() if len(description) else ''
         result.append(
             "{indent}:returns: {first_description}".format(indent=indent,
                first_description=first_description))
-
 
 
 class Yields(Node):
@@ -254,17 +255,14 @@ class Yields(Node):
                 first_description=first_description))
 
 
-
 class Warning(Node):
 
     def __init__(self, indent):
         super(Warning, self).__init__(indent=indent)
         self.line = '' # TODO: Can't we use self.lines in the superclass for this?
 
-
     def __repr__(self):
         return "Warning(" + repr(self.indent) + ", children=" + str(self.children) + ")"
-
 
     def render_rst(self, *args, **kwargs):
         # TODO: Factor out the commonality between this and Note below
@@ -291,10 +289,8 @@ class Note(Node):
         super(Note, self).__init__(indent=indent)
         self.line = ''  # TODO: Can't we use self.lines in the superclass for this?
 
-
     def __repr__(self):
         return "Note(" + repr(self.indent) + ", children=" + str(self.children) + ")"
-
 
     def render_rst(self, *args, **kwargs):
         # TODO: Factor out the commonality between this and Warning above
