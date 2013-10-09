@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 __author__ = 'Robert Smallshire'
 import sys
 
