@@ -12,8 +12,8 @@ Alternatively, you can download and unpack the source distribution from the
 distribution into a temporary directory and run the setup script which will
 install ``cartouche`` into the current Python environment, for example::
 
-  $ tar xzf cartouche-1.1.tar.gz
-  $ cd cartouche-1.1
+  $ tar xzf cartouche-1.1.1.tar.gz
+  $ cd cartouche-1.1.1
   $ python setup.py install
 
 
