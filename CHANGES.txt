@@ -1,4 +1,4 @@
-Version 1.1.1
+Version 1.1.2
 -------------
 
 * Fixes broken support for Python 2
